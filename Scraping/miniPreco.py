@@ -1,9 +1,8 @@
-from unicodedata import category
 from bs4 import BeautifulSoup as BS
 import requests
-import re
-import csv
 
+import csv
+import os
 
 rows = []
 
@@ -18,11 +17,11 @@ def getProdutosPagina(link):
     
     ## CSV BUILD
         
-        #
-        # PpU = Preço por Unidade
-    
-    campos = ['Nome', 'Preço','Preço Antigo', 'PpU', 'PpU Antigo']
-    file = 'ProdutosMP/'+titulo.replace(" ","").lower()+'.csv'
+    campos = ['Nome', 'Preço','Preço Antigo', 'PpU', 'PpU Antigo']     # PpU = Preço por Unidade
+
+    if not os.path.exists("ProdutosMP"):
+        os.makedirs("ProdutosMP")
+    file = 'ProdutosMP/'+ titulo.replace(" ","").lower()+'.csv'
     csvo = open(file,'w')
     csvwriter= csv.writer(csvo)
     csvwriter.writerow(campos)
@@ -40,7 +39,6 @@ def getProdutosPagina(link):
             oldPrice = old.text.strip()               
             old.string = ''
         precoProduto = tagPrecos.text.strip()  
-        #print(tagPrecos.contents)
         if tagPrecos.text!="\n":
             
             oldPriceKg = ''
@@ -49,16 +47,6 @@ def getProdutosPagina(link):
                 old.string = ''
             precoKg = tagPrecosKg.text.strip()[1:-2]
             
-            #
-
-            #print(oldPrice)
-            #print(oldPriceKg)
-
-            #
-
-            # print(nomeProduto)        
-            # print(precoProduto)
-            # print(precoKg)
 
             #! Ha um codigo de produto (penso que seja só interno)
             rows.append([nomeProduto,precoProduto,oldPrice,precoKg,oldPriceKg])
@@ -66,17 +54,11 @@ def getProdutosPagina(link):
             pass                    #data-productCode
          
     nextpage = soup.find(["li"], class_ ="next").find(["a"])["href"]
-    #print(nextpage)
     if nextpage == '#':
         csvwriter.writerows(rows)
         rows.clear()
     else:     
         getProdutosPagina("https://www.minipreco.pt" + nextpage)
-
-#getProdutosPagina("https://www.minipreco.pt/produtos/mercearia-doce/c/WEB.004.000.00000?q=%3Arelevance&page=12&disp=")
-
-
-
 
 
 def getPaginas(link):
