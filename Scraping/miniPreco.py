@@ -8,8 +8,7 @@ import csv
 rows = []
 
 def getProdutosPagina(link):
-    
-    
+       
     html = requests.get(link).text
     soup = BS(html,"html.parser")
     titulo = soup.find(["meta"],property="og:description")["content"]
@@ -17,57 +16,64 @@ def getProdutosPagina(link):
     tags = soup.find(["div"],class_="product-list--row")
     produtos = tags.find_all(["a"])
     
-    # CSV BUILD
-    campos = ['Nome', 'Preço', 'Preço/Kg']
+    ## CSV BUILD
+        
+        #
+        # PpU = Preço por Unidade
+    
+    campos = ['Nome', 'Preço','Preço Antigo', 'PpU', 'PpU Antigo']
     file = 'ProdutosMP/'+titulo.replace(" ","").lower()+'.csv'
     csvo = open(file,'w')
     csvwriter= csv.writer(csvo)
     csvwriter.writerow(campos)
 
+    
     for elem in produtos:
         
-        nomeProduto = elem.find(["span"],class_="details").text.strip() 
-        tagPrecosGeral = elem.find(["div"],class_="price_container")  # as a reminder: esta tag contém a tag com o preço e a tag com o preço/kg
+        nomeProduto = elem.find(["span"],class_="details").text.strip()         # as a reminder:
+        tagPrecosGeral = elem.find(["div"],class_="price_container") # tag com a tag com o preço e a tag com o preço/kg
         tagPrecos = tagPrecosGeral.find(["p"],class_="price") # tag com o preço
-        tagPrecosKg = tagPrecosGeral.find(["p"],class_="pricePerKilogram") # tag com o preço por kilo ou preço por unidade
+        tagPrecosKg = tagPrecosGeral.find(["p"],class_="pricePerKilogram") # tag com o preço por kilo/preço por unidade
 
-        
         oldPrice = ''
         if old := tagPrecos.find(["s"]):      #! significa que sofreu uma promoção
             oldPrice = old.text.strip()               
             old.string = ''
         precoProduto = tagPrecos.text.strip()  
+        #print(tagPrecos.contents)
+        if tagPrecos.text!="\n":
+            
+            oldPriceKg = ''
+            if old := tagPrecosKg.find(["s"]):     #! significa que sofreu uma promoção
+                oldPriceKg = old.text.strip()[1:-2]
+                old.string = ''
+            precoKg = tagPrecosKg.text.strip()[1:-2]
+            
+            #
 
-        oldPriceKg = ''
-        if old := tagPrecosKg.find(["s"]):     #! significa que sofreu uma promoção
-            oldPriceKg = old.text
-            old.string = ''
-        precoProdutoKg = tagPrecosKg.text.strip()[1:-2]
-        
-        #print(oldPrice) #? preço e preço por kg/unidade antes da promoção, pode ser útil?
-        #print(oldPriceKg)
+            #print(oldPrice)
+            #print(oldPriceKg)
 
-        # print(nomeProduto)        
-        # print(precoProduto)
-        # print(precoProdutoKg)
-        #! Ha um codigo de produto mas penso que seja so interno
-                            #data-productCode
-        
-        
-        
-        # Adição a ficheiro csv - só pq sim
-        rows.append([nomeProduto,precoProduto,precoProdutoKg])
-        
-    
+            #
+
+            # print(nomeProduto)        
+            # print(precoProduto)
+            # print(precoKg)
+
+            #! Ha um codigo de produto (penso que seja só interno)
+            rows.append([nomeProduto,precoProduto,oldPrice,precoKg,oldPriceKg])
+        else:
+            pass                    #data-productCode
+         
     nextpage = soup.find(["li"], class_ ="next").find(["a"])["href"]
-    print(nextpage)
+    #print(nextpage)
     if nextpage == '#':
-        pass
+        csvwriter.writerows(rows)
+        rows.clear()
     else:     
         getProdutosPagina("https://www.minipreco.pt" + nextpage)
-    csvwriter.writerows(rows)
 
-getProdutosPagina("https://www.minipreco.pt/produtos/mercearia-salgada/c/WEB.003.000.00000")
+#getProdutosPagina("https://www.minipreco.pt/produtos/mercearia-doce/c/WEB.004.000.00000?q=%3Arelevance&page=12&disp=")
 
 
 
@@ -83,7 +89,6 @@ def getPaginas(link):
     for pagina in paginas:
         linkIncomplete = pagina.find(["a"])["href"]
         categoria = pagina.find(["a"]).text.strip().split('-')[0]
-        print(categoria)
         link = "https://www.minipreco.pt" + str(linkIncomplete)
         links.append((categoria,link))
 
@@ -91,6 +96,6 @@ def getPaginas(link):
         getProdutosPagina(elem[1])
         print("---->" + elem[0] + "     FEITO")
    
-#getPaginas("https://www.minipreco.pt")
+getPaginas("https://www.minipreco.pt")
 
 
