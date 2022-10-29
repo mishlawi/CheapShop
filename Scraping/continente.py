@@ -21,6 +21,8 @@ def getPaginas(link):
 
 
 
-
+def getProdutos(link):
+    html = requests.get(link).text
+    soup = BS(html,"html.parser")
 
 getPaginas("https://www.continente.pt")
