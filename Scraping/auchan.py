@@ -4,51 +4,46 @@ import re
 import csv
 import os
 import json
+import time
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
+
+# options= Options()
+# options.add_argument('--headless')
+# s= Service('./chromedriver.exe')
+
+# driver = webdriver.Chrome(service=s, options=options)
+# driver.get("https://www.auchan.pt/")
+#time.sleep(10000)
 
 # sites = ['produtos-frescos','alimentacao','bebidas-e-garrafeira','limpeza-da-casa-e-roupa','beleza-e-higiene','o-mundo-do-bebe','biologicos-e-escolhas-alimentares','tecnologia-e-eletrodomesticos','saude-e-bem-estar','animais','tecnologia-e-eletrodomesticos','brinquedos-papelaria-e-livraria','casa-e-jardim','bricolage-e-renovacoes','automovel-desporto-e-outdoor','produtos-locais','loja-gourmet']
 
-
-# def getPaginas():
-    
-#     for site in sites:
-#         link = 'https://www.auchan.pt/pt/' + site +'/'
-#         print("\n**********************")
-#         print(link)
-        
-
-
-# def getWithCategories(link):
-    
-#     html = requests.get(link).text
-#     soup = BS(html,"html.parser")
-#     categorias = soup.find("ul",class_="sub-categories__container")
-#     links = [elem["href"] for elem in categorias.find_all("a")]
-#     print(links)    
-
-#getWithCategories("https://www.auchan.pt/pt/produtos-frescos/")
-
-
-
-
+count=0
 
 def getProdutos(link):
-    xml = requests.get(link).text
+    s= requests.Session()
+    xml = s.get(link).text
     soup = BS(xml,features='lxml')
     tags = soup.find_all("url")
-    infoProdutos = [getProductInfo(produto.find("loc").text) for produto in tags]
+    infoProdutos = []
+    for produto in tags:
+        infoProdutos.append(getProductInfo(produto.find("loc").text))
     
     return infoProdutos
 
 
 def getProductInfo(link):
-    html = requests.get(link).text
+    s = requests.Session()
+    html = s.get(link).text
     soup = BS(html,features='html.parser')
     try:
         tagJson = soup.find("script",type="application/ld+json").text
         jsonDic = json.loads(tagJson)
         nome = jsonDic["name"]
         preco = jsonDic["offers"]["price"] + '€'
+        
         print(nome,preco)
         return nome,preco
     except:
