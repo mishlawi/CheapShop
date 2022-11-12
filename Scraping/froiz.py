@@ -3,14 +3,14 @@ import requests
 import csv
 import re
 
-rows = []
 
 def getProdutosPagina(link):
+    rows = set()
     total = 0
         
     # CSV BUILD
     campos = ['Nome', 'Marca', 'Unidade', 'Preço', 'Preço anterior', 'Preço por unidade']
-    file = 'ProdutosFroiz.csv'
+    file = 'csvProdutos/ProdutosFroiz.csv'
     csvo = open(file,'w')
     csvwriter = csv.writer(csvo)
     csvwriter.writerow(campos)
@@ -64,7 +64,7 @@ def getProdutosPagina(link):
                 productprice = productelem.find('h4',class_='title').text.strip()
             productpriceperunit = productelem.find('div',class_='row-fluid hidden-line').find('div',class_='span8').text.strip()
 
-            rows.append([productname,'','',productprice,productpricestrike,productpriceperunit])
+            rows.add((productname,'','',productprice,productpricestrike,productpriceperunit))
 
     csvwriter.writerows(rows)
     print(total)
