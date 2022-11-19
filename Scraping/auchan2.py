@@ -78,7 +78,7 @@ def subCategoriesInfo(link):
         if int(number) > 25 and int(number) < 2000:
             products = dynamic(cgid)
             print("CATEGORIA OU SUBCATEGORIA COM MENOS DE 2000 Produtos\n")
-            print("Numero de produtos sacados: ", len(products))
+            print("Numero de produtos retirados: ", len(products))
             print("Número de produtos existentes no site: ", number)
             if (len(products)!=int(number)):
                 print("\n!!!!!!!!!!!!!!!")
@@ -90,7 +90,7 @@ def subCategoriesInfo(link):
                 products.extend(dynamicHuge(cgid, x * 2000))
                 x += 1
             print("CATEGORIA OU SUBCATEGORIA COM MAIS DE 2000 Produtos\n")
-            print("Numero de produtos sacados: ", len(products))
+            print("Numero de produtos retirados: ", len(products))
             print("Número de produtos existentes no site: ", number)
             if (len(products)!=int(number)):
                 print("!!!!!!!!!!!!!!!")
