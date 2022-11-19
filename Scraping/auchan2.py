@@ -100,6 +100,7 @@ def subCategoriesInfo(link):
         else:  #
             print("CATEGORIA/SUBCATEGORIA COM MENOS DE 24 PRODUTOS\n")
             products = normal(link)
+    return products
 
 # O SITE:
 # Para ir buscar os produtos utilizo uma chamada que o website faz ao carregar os produtos por lazy loading, vi na tab do network na consola
@@ -209,11 +210,18 @@ def normal(link):
     for elem in groupTag:
         nomeProduto = elem.find("a", class_="link").text
         preco = elem.find("span", class_="value").text.strip()
+        precoAntes = ''
+        if "from" in preco:  # promocao esta no formato price reduced FROM X TO Y
+            preco = re.split("from", preco)[1].strip()
+            preco = preco.replace("\n", "")
+            preco = preco.replace("to",'')
+            precoAntes = re.split("to", preco)[0].strip()
+        preco = preco.replace("\n", "")
         precoUnidade = elem.find(
             "span", class_="auc-measures--price-per-unit"
         ).text.strip()
         information.append(
-            (nomeProduto, preco, precoUnidade, "")
-        )  #TODO apanhar descontos
+            (nomeProduto, preco, precoUnidade, precoAntes)
+        )
 
 getPaginas()

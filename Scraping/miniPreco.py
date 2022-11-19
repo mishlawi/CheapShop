@@ -16,12 +16,12 @@ def getProdutosPagina(link):
     produtos = tags.find_all(["a"])
     
     ## CSV BUILD
-        
-    campos = ['Nome', 'Preço','Preço Antigo', 'PpU', 'PpU Antigo']     # PpU = Preço por Unidade
+            
+    campos = ['NAME','BRAND','QUANTITY','PRICE','PPU','OLDPRICE','OLDPPU','EAN']     # PpU = PRICE PER UNIT
 
-    if not os.path.exists("ProdutosMP"):
-        os.makedirs("ProdutosMP")
-    file = 'ProdutosMP/'+ titulo.replace(" ","").lower()+'.csv'
+    if not os.path.exists("csvProdutos/ProdutosMP"):
+        os.makedirs("csvProdutos/ProdutosMP")
+    file = 'csvProdutos/ProdutosMP/'+ titulo.replace(" ","").lower()+'.csv'
     csvo = open(file,'w')
     csvwriter= csv.writer(csvo)
     csvwriter.writerow(campos)
@@ -48,8 +48,7 @@ def getProdutosPagina(link):
             precoKg = tagPrecosKg.text.strip()[1:-2]
             
 
-            #! Ha um codigo de produto (penso que seja só interno)
-            rows.append([nomeProduto,precoProduto,oldPrice,precoKg,oldPriceKg])
+            rows.append([nomeProduto,'','',precoProduto,precoKg,oldPrice,oldPriceKg,''])
         else:
             pass                    #data-productCode
          
@@ -78,6 +77,11 @@ def getPaginas(link):
         getProdutosPagina(elem[1])
         print("---->" + elem[0] + "     FEITO")
    
-getPaginas("https://www.minipreco.pt")
+
+def main():
+    getPaginas("https://www.minipreco.pt")
+
+if __name__ == "__main__":
+    main()
 
 

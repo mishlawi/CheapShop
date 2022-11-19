@@ -1,9 +1,10 @@
 # Byte-compiled / optimized / DLL files
 PI/
-ProdutosMP/
 __pycache__/
 *.py[cod]
 *$py.class
+site.xml
+sitemap.xml
 
 # C extensions
 *.so
