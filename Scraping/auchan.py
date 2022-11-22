@@ -68,7 +68,6 @@ def getProductInfo(link):
     
 def getInfoProdutos():
     getProdutos('https://www.auchan.pt/sitemap_0-product.xml')
-    
     getProdutos('https://www.auchan.pt/sitemap_1-product.xml')
     
     fields = ['NAME','BRAND','QUANTITY','PRICE','PPU','OLDPRICE','EAN']

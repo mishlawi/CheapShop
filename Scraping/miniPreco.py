@@ -3,6 +3,7 @@ import requests
 
 import csv
 import os
+import re 
 
 rows = []
 
@@ -30,6 +31,11 @@ def getProdutosPagina(link):
     for elem in produtos:
         
         nomeProduto = elem.find(["span"],class_="details").text.strip()         # as a reminder:
+        marcaRegex = re.findall(r'[A-Z]{2,}',nomeProduto)
+        marca = ''
+        for regex in marcaRegex:
+            marca += regex + ' '
+        marca = marca.rstrip()
         tagPrecosGeral = elem.find(["div"],class_="price_container") # tag com a tag com o preço e a tag com o preço/kg
         tagPrecos = tagPrecosGeral.find(["p"],class_="price") # tag com o preço
         tagPrecosKg = tagPrecosGeral.find(["p"],class_="pricePerKilogram") # tag com o preço por kilo/preço por unidade
@@ -48,7 +54,7 @@ def getProdutosPagina(link):
             precoKg = tagPrecosKg.text.strip()[1:-2]
             
 
-            rows.append([nomeProduto,'','',precoProduto,precoKg,oldPrice,oldPriceKg,''])
+            rows.append([nomeProduto,marca,'',precoProduto,precoKg,oldPrice,oldPriceKg,''])
         else:
             pass                    #data-productCode
          
