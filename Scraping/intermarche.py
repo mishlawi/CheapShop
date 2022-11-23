@@ -53,7 +53,8 @@ def processStore(storelink):
     print(storelink)
 
     # CSV BUILD
-    campos = ['Nome', 'Marca', 'Unidade', 'Preço Primário', 'Preço Secundário']
+    campos = ['Nome', 'Marca', 'Quantidade',
+              'Preço Primário', 'Preço Por Unidade', 'Promo']
     file = f"csvProdutos/ProdutosIntermarche/ProdutosIntermarche_{storelink.split('/')[-1]}.csv"
     csvo = open(file, 'w')
     csvwriter = csv.writer(csvo)
@@ -102,8 +103,9 @@ def processStore(storelink):
                 quantity = infodiv.find('span').text.strip()
                 price = pricediv.find('p', class_='').text.strip()
                 ppu = pricediv.find('p', class_=None).text.strip()
+                promo = None
 
-                rows.add((name, brand, quantity, price, ppu))
+                rows.add((name, brand, quantity, price, ppu, promo))
         else:
             s.close()
             break

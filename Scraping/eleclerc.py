@@ -59,7 +59,7 @@ def processStore(lojalink):
     
     # CSV BUILD
     rows = set()
-    campos = ['Nome', 'Marca', 'Quantidade', 'Preço Primário', 'Preço Por Unidade','Promo']
+    campos = ['Nome', 'Marca', 'Quantidade', 'Preço Primário', 'Preço Por Unidade', 'Promo']
     file = f"ProdutosEleclerc_{localstore}.csv"
     csvo = open(file,'w')
     csvwriter = csv.writer(csvo)

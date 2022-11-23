@@ -31,7 +31,7 @@ def getProdutosPagina(link):
     rows = set()
     
     # CSV BUILD
-    campos = ['Nome', 'Marca', 'Quantidade', 'Preço Primário', 'Preço Por Unidade','Promo']
+    campos = ['Nome', 'Marca', 'Quantidade', 'Preço Primário', 'Preço Por Unidade', 'Promo']
     file = 'csvProdutos/ProdutosElCorteIngles.csv'
     csvo = open(file,'w')
     csvwriter = csv.writer(csvo)
