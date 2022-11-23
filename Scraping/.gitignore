@@ -5,6 +5,7 @@ __pycache__/
 *$py.class
 site.xml
 sitemap.xml
+csvProdutos/
 
 # C extensions
 *.so
