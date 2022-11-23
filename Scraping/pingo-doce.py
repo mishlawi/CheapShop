@@ -68,7 +68,7 @@ def getProdutosPagina():
             try:
                 page = s.get(thislink).json()['sections']['null']
             except:
-                print(f'ERROR::: got {len(produtos)} products')
+                #print(f'ERROR::: got {len(produtos)} products')
                 time.sleep(60)
 
     csvwriter.writerows(rows)
