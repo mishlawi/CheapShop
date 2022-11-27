@@ -54,10 +54,10 @@ def getProdutosPagina():
                 product = product['_source']
                 # if product['slug'] in produtos.keys():
                 #     continue
-                name = product['firstName'],
-                brand = product['brand']['name'],
-                price = product['regularPrice'],
-                promo = product['campaignPrice'],
+                name = product['firstName']
+                brand = product['brand']['name']
+                price = product['regularPrice']
+                promo = product['campaignPrice']
                 quantity = product['capacity']
                 ppu = None
 

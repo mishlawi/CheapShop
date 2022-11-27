@@ -24,7 +24,8 @@ def getProdutosPagina(link):
     rows = set()
 
     # CSV BUILD
-    campos = ['Nome', 'Marca', 'Quantidade', 'Preço Primário', 'Preço Por Unidade','Promo']
+    campos = ['Nome', 'Marca', 'Quantidade',
+              'Preço Primário', 'Preço Por Unidade', 'Promo']
     file = 'csvProdutos/ProdutosContinente.csv'
     csvo = open(file, 'w')
     csvwriter = csv.writer(csvo)
@@ -107,7 +108,7 @@ def getProdutosPagina(link):
                 productbrand = product.find(['p'], class_="ct-tile--brand").text.strip(
                 ) if product.find(['p'], class_="ct-tile--brand") else None
                 productquantity = product.find(
-                    ['p'], class_="ct-tile--quantity").text.strip()
+                    ['p'], class_="ct-tile--quantity").text.strip() if product.find(['p'], class_="ct-tile--quantity") else None
 
                 pp = product.find(
                     ['span'], class_="sales ct-tile--price-primary")

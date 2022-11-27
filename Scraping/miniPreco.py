@@ -25,7 +25,7 @@ def getProdutosPagina(link):
 
     if not os.path.exists("ProdutosMP"):
         os.makedirs("ProdutosMP")
-    file = 'ProdutosMP/' + titulo.replace(" ", "").lower()+'.csv'
+    file = 'csvProdutos/ProdutosMP/' + titulo.replace(" ", "").lower()+'.csv'
     csvo = open(file, 'w')
     csvwriter = csv.writer(csvo)
     csvwriter.writerow(campos)
@@ -36,7 +36,7 @@ def getProdutosPagina(link):
         nomeProduto = elem.find(["span"], class_="details").text.strip()
 
         marcaRegex = re.findall(r'[A-Z]{2,}', nomeProduto)
-        marca = None
+        marca = ' '
         for regex in marcaRegex:
             marca += regex + ' '
         marca = marca.rstrip()
