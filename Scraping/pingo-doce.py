@@ -51,7 +51,8 @@ def getProdutosPagina():
             page = s.get(thislink).json()['sections']['null']
         except:
             print(thislink)
-            exit(-1)
+            #exit(-1)
+            continue
         total = page['total']
         print(categoria + f' ({total})')
         i = 0
@@ -63,9 +64,12 @@ def getProdutosPagina():
                 name = product['firstName']
                 brand = product['brand']['name']
                 price = product['regularPrice']
-                promo = product['campaignPrice']
+                if price != product['buyingPrice']:
+                    promo = product['buyingPrice']
+                else:
+                    promo = None
                 quantity = product['capacity']
-                ppu = regra3simples(price, product['netContent'])
+                ppu = regra3simples(product['buyingPrice'], product['netContent'])
                 try:
                     ean = product['eans'][0]
                 except:
