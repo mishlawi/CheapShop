@@ -124,9 +124,9 @@ def getProdutosPagina(link):
                 promo = None
 
                 rows.add((name, productbrand, productquantity, ppu, spu, promo))
-                # print(name)
-                # print(ppu)
-                # print(spu)
+                print(name)
+                print(ppu)
+                print(spu)
 
     csvwriter.writerows(rows)
 

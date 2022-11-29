@@ -9,6 +9,10 @@ APIIDS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/categories
 APIPRODUTOS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/products/search?mainCategoriesIds=["@catID@"]&from=@startPoint@&size=100&esPreference=0.6439211110152693'
 
 
+def regra3simples(preco, quantidade, pretendido=1):
+    return pretendido*float(preco)/float(quantidade)
+
+
 def getProdutosPagina():
     # CSV BUILD
     campos = ['Nome', 'Marca', 'Quantidade',
@@ -20,8 +24,9 @@ def getProdutosPagina():
 
     rows = set()
 
+    s = requests.Session()
     print('getting sitemap...')
-    sitemap = requests.get(SITEMAP)
+    sitemap = s.get(SITEMAP)
 
     xmlstr = minidom.parseString(sitemap.content).toprettyxml(indent="   ")
     with open("sitemap.xml", "w") as f:
@@ -33,7 +38,8 @@ def getProdutosPagina():
         r'<loc>https://mercadao\.pt/store/pingo-doce/category/((\w|-)+)</loc>', xmlstr)
     categorias = []
     for elem in categoriasTemp:
-        categorias.append((elem[0], requests.get(APIIDS+elem[0]).json()['id']))
+        s = requests.Session()
+        categorias.append((elem[0], s.get(APIIDS+elem[0]).json()['id']))
 
     #produtos = {}
     print('Starting getting products...')
@@ -59,9 +65,13 @@ def getProdutosPagina():
                 price = product['regularPrice']
                 promo = product['campaignPrice']
                 quantity = product['capacity']
-                ppu = None
+                ppu = regra3simples(price, product['netContent'])
+                try:
+                    ean = product['eans'][0]
+                except:
+                    ean = None
 
-                rows.add((name, brand, quantity, price, ppu, promo))
+                rows.add((name, brand, quantity, price, ppu, promo, ean))
                 # produtos[product['slug']] = objProduct
             i += 100
             thislink = sub(r'@startPoint@', str(i), link)
