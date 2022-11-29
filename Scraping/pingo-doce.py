@@ -16,7 +16,7 @@ def regra3simples(preco, quantidade, pretendido=1):
 def getProdutosPagina():
     # CSV BUILD
     campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
+              'Preço Primário', 'Preço Por Unidade', 'Promo', 'EAN']
     file = f"csvProdutos/ProdutosPingoDoce.csv"
     csvo = open(file, 'w')
     csvwriter = csv.writer(csvo)
