@@ -19,12 +19,11 @@ def getProdutosPagina(link):
 
     # CSV BUILD
 
-    campos = ['Nome', 'Preço', 'Preço Antigo', 'PpU',
-              'PpU Antigo']     # PpU = Preço por Unidade
-    ['Nome', 'Marca', 'Quantidade', 'Preço Primário', 'Preço Por Unidade', 'Promo']
+    campos = ['Nome', 'Marca', 'Quantidade',
+              'Preço Primário', 'Preço Por Unidade', 'Promo']
 
-    if not os.path.exists("ProdutosMP"):
-        os.makedirs("ProdutosMP")
+    if not os.path.exists("csvProdutos/ProdutosMP"):
+        os.makedirs("csvProdutos/ProdutosMP")
     file = 'csvProdutos/ProdutosMP/' + titulo.replace(" ", "").lower()+'.csv'
     csvo = open(file, 'w')
     csvwriter = csv.writer(csvo)
@@ -34,12 +33,23 @@ def getProdutosPagina(link):
 
         # as a reminder:
         nomeProduto = elem.find(["span"], class_="details").text.strip()
+        quantity = None
 
-        marcaRegex = re.findall(r'[A-Z]{2,}', nomeProduto)
-        marca = ' '
-        for regex in marcaRegex:
-            marca += regex + ' '
-        marca = marca.rstrip()
+        marca = None
+        if match := re.match(r'\b[A-ZÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ+\'-_: ]+[^ I]\b', nomeProduto):
+            marca = match[0].strip()
+            nomeProduto = nomeProduto.replace(marca, '').strip()
+
+        # marcaRegex = re.findall(r'[A-ZÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]{2,}', nomeProduto)
+        # marca = ' '
+        # for regex in marcaRegex:
+        #     marca += regex + ' '
+        # marca = marca.strip()
+
+        if quantity := re.search(r'(\(\d+[^()]+?\)|\d+((x|,|\.)\d+)?[^0-9()a-zA-Z]+?\w{,3})$', nomeProduto):
+            quantity = quantity.group(0)
+            nomeProduto = nomeProduto.replace(quantity, '').strip()
+
         # tag com a tag com o preço e a tag com o preço/kg
         tagPrecosGeral = elem.find(["div"], class_="price_container")
         tagPrecos = tagPrecosGeral.find(
@@ -47,29 +57,38 @@ def getProdutosPagina(link):
         # tag com o preço por kilo/preço por unidade
         tagPrecosKg = tagPrecosGeral.find(["p"], class_="pricePerKilogram")
 
-        quantity = None
+        oldPrice = None
+        oldPriceKg = None
+        promo = None
 
-        oldPrice = ''
         if old := tagPrecos.find(["s"]):  # ! significa que sofreu uma promoção
-            oldPrice = old.text.strip()
+            oldPrice = float(old.text.strip().replace(',', '.')[:-1])
             old.string = ''
-        promo = tagPrecos.text.strip()
-        if tagPrecos.text != "\n":
+            promo = float(tagPrecos.text.strip().replace(',', '.')[:-1])
+        else:
+            if tagPrecos.text.strip():
+                oldPrice = float(tagPrecos.text.strip().replace(',', '.')[:-1])
+            else:
+                oldPrice = 'Indisponível'
 
-            oldPriceKg = ''
+        if tagPrecosKg:
             # ! significa que sofreu uma promoção
             if old := tagPrecosKg.find(["s"]):
-                oldPriceKg = old.text.strip()[1:-2]
+                oldPriceKg = tagPrecosKg.text.strip()
+                oldPriceKg = oldPriceKg[oldPriceKg.find(
+                    "(")+1:oldPriceKg.find(")")].replace('.', '')
                 old.string = ''
-            # not existent on other supermarkets so we're not adding this to the csv
-            precopromoKg = tagPrecosKg.text.strip()[1:-2]
-
-            #! Ha um codigo de produto (penso que seja só interno)
-            # adding old price and old price per unit and then the promo price, if no promo, field stays blank
-            rows.add((nomeProduto, marca, quantity,
-                     oldPrice, oldPriceKg, promo))
+            else:
+                oldPriceKg = tagPrecosKg.text.strip()
+                oldPriceKg = oldPriceKg[oldPriceKg.find(
+                    "(")+1:oldPriceKg.find(")")].replace('.', '')
         else:
             pass  # data-productCode
+
+        #! Ha um codigo de produto (penso que seja só interno)
+        # adding old price and old price per unit and then the promo price, if no promo, field stays blank
+        rows.add((nomeProduto, marca, quantity,
+                  oldPrice, oldPriceKg, promo))
 
     nextpage = soup.find(["li"], class_="next").find(["a"])["href"]
     if nextpage == '#':

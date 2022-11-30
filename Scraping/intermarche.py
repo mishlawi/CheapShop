@@ -101,9 +101,13 @@ def processStore(storelink):
                 name = infodiv.find(lambda tag: tag.name == 'p' and tag.get(
                     'class') == None).text.strip()
                 quantity = infodiv.find('span').text.strip()
-                price = pricediv.find('p', class_='').text.strip()
+                if pricediv.find('p', class_='red-text surligner'):
+                    promo = price = pricediv.find(
+                        'p', class_='red-text surligner').text.strip()
+                else:
+                    promo = None
+                    price = pricediv.find('p', class_='').text.strip()
                 ppu = pricediv.find('p', class_=None).text.strip()
-                promo = None
 
                 rows.add((name, brand, quantity, price, ppu, promo))
         else:
