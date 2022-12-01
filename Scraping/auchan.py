@@ -6,11 +6,11 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import csv
 
-products = []
-count = 0
+products = set()
+
 def getProdutos(link):
+    #xml = open("site.xml").read()
     
-    #xml = open('site.xml').read()
     s = requests.Session()
     xml = s.get(link).text
     soup = BS(xml,features='lxml')
@@ -28,10 +28,10 @@ def getProductInfo(link):
     html = s.get(link).text
     soup = BS(html,features='html.parser')
     try:
-        
+    
         try:    #promotion
             tagPromocao = soup.find("span",class_="strike-through value")
-            beforePrice = tagPromocao["content"]
+            beforePrice = tagPromocao["content"] + '€'
         
         except TypeError:
             beforePrice = 'None'        
@@ -39,12 +39,21 @@ def getProductInfo(link):
         tagJson = soup.find("script",type="application/ld+json").text
         jsonDic = json.loads(tagJson)
         nome = jsonDic["name"]
-        preco = jsonDic["offers"]["price"]        
-        ean = soup.find("span",class_="product-ean").text 
-        ppu = soup.find("span",class_="auc-measures--price-per-unit").text
-        brand = None
-        qnt = None
-        if 'Quantidade Liquida' in soup.find("h3",class_="attribute-name auc-pdp-attribute-title").text:
+        preco = jsonDic["offers"]["price"] + '€'        
+        ean = soup.find("span",class_="product-ean").text
+        if soup.find("span",class_="auc-measures--price-per-unit")!=None: 
+            ppu = soup.find("span",class_="auc-measures--price-per-unit").text
+        else:
+            ppu = preco
+        qnt = 'None'
+        try:
+            brandTag = soup.find("script",type="application/ld+json").text
+            brandJson = json.loads(brandTag)
+            brand = brandJson["brand"]["name"]
+        except KeyError:
+            brand = 'None'
+        
+        if soup.find("h3",class_="attribute-name auc-pdp-attribute-title") != None and 'Quantidade Liquida' in soup.find("h3",class_="attribute-name auc-pdp-attribute-title").text:
             qnt = soup.find("li",class_="attribute-values auc-pdp-regular").text.strip()
         else: 
             if x:= re.search(r'((\d+)\.)?\d+((L|ML|KG|G)| ?(ml|ML|CL))|KG|(\d+)?UN',nome):
@@ -57,20 +66,25 @@ def getProductInfo(link):
                 elif qnt == 'UN':
                     qnt == '1 UN'
 
-        products.append((nome,brand,qnt,beforePrice,ppu,preco,ean))
+        products.add((nome,brand,qnt,preco,ppu,beforePrice,ean))
 
 
     except AttributeError:
        print(f"\nproduto removido do site, LINK para confirmar -> {link} \n")
 
 
-    #https://www.auchan.pt/sitemap_0-product.xml
-    #https://www.auchan.pt/sitemap_1-product.xml
+
+#https://www.auchan.pt/sitemap_0-product.xml
+#https://www.auchan.pt/sitemap_1-product.xml
     
 def getInfoProdutos():
+    print("Starting..")
     getProdutos('https://www.auchan.pt/sitemap_0-product.xml')
+    print("Finished first sitemap..")
     getProdutos('https://www.auchan.pt/sitemap_1-product.xml')
+    print("Finished second sitemap...")
     
+    print("Writing in csv")
     fields = ['Nome', 'Marca', 'Quantidade',
               'Preço Primário', 'Preço Por Unidade', 'Promo','EAN']
     print(products)
