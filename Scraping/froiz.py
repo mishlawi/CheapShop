@@ -31,7 +31,7 @@ def getProdutosPagina(link):
                 categoryid = category.find('a')['href']
                 categoriesids.append(categoryid)
 
-    print(categoriesids)
+    #print(categoriesids)
 
     subcategorylinks = {}
     for categoryid in categoriesids:
@@ -49,7 +49,7 @@ def getProdutosPagina(link):
 
     # print(len(subcategorylinks))
     for subcategorylink in subcategorylinks:
-        print(subcategorylinks[subcategorylink])
+        #print(subcategorylinks[subcategorylink])
         htmlsubcategory = requests.get(subcategorylink).text
         soupsubcategory = BS(htmlsubcategory, "html.parser")
 
@@ -60,21 +60,25 @@ def getProdutosPagina(link):
         productelems = soupsubcategory.find_all(
             'div', class_='row-fluid popup-products')
         for productelem in productelems:
+            brand = productelem.find('div',class_='span3 isotope--target')['data-brand']
             productname = productelem.find(
                 'p', class_='push-down-10 isotope--title dproducto').text.strip()
             promo = None
             if productelem.find('h4', class_='title').find_all('span'):
-                productprice = productelem.find('h4', class_='title').find(
-                    'span', class_='red-clr').text.strip()
                 promo = productelem.find('h4', class_='title').find(
+                    'span', class_='red-clr').text.strip()
+                productprice = productelem.find('h4', class_='title').find(
                     'span', class_='striked').text.strip()
             else:
                 productprice = productelem.find(
                     'h4', class_='title').text.strip()
             productpriceperunit = productelem.find(
                 'div', class_='row-fluid hidden-line').find('div', class_='span8').text.strip()
-            brand = None
             quantity = None
+            if quantity := re.search(r'(\(\d+[^()]+?\)|\d+((x|,|\.)\d+)?([^0-9()a-zA-Z]+)?(\w{,3}|unidades))$', productname):
+                quantity = quantity.group(0)
+                productname = productname.replace(quantity, '').strip()
+                productname = productname.replace('embalagem', '').strip()
             rows.add((productname, brand, quantity, productprice,
                      productpriceperunit, promo))
 
@@ -82,4 +86,4 @@ def getProdutosPagina(link):
     print(total)
 
 
-getProdutosPagina('https://www.froiz.com/shop/')
+getProdutosPagina('https://loja.froiz.com/')

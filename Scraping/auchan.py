@@ -31,7 +31,7 @@ def getProductInfo(link):
         
         try:    #promotion
             tagPromocao = soup.find("span",class_="strike-through value")
-            beforePrice = tagPromocao["content"] + '€'
+            beforePrice = tagPromocao["content"]
         
         except TypeError:
             beforePrice = 'None'        
@@ -39,10 +39,11 @@ def getProductInfo(link):
         tagJson = soup.find("script",type="application/ld+json").text
         jsonDic = json.loads(tagJson)
         nome = jsonDic["name"]
-        preco = jsonDic["offers"]["price"] + '€'        
+        preco = jsonDic["offers"]["price"]        
         ean = soup.find("span",class_="product-ean").text 
         ppu = soup.find("span",class_="auc-measures--price-per-unit").text
-        qnt = 'None'
+        brand = None
+        qnt = None
         if 'Quantidade Liquida' in soup.find("h3",class_="attribute-name auc-pdp-attribute-title").text:
             qnt = soup.find("li",class_="attribute-values auc-pdp-regular").text.strip()
         else: 
@@ -56,7 +57,7 @@ def getProductInfo(link):
                 elif qnt == 'UN':
                     qnt == '1 UN'
 
-        products.append((nome,'None',qnt,preco,ppu,beforePrice,ean))
+        products.append((nome,brand,qnt,beforePrice,ppu,preco,ean))
 
 
     except AttributeError:
@@ -70,7 +71,8 @@ def getInfoProdutos():
     getProdutos('https://www.auchan.pt/sitemap_0-product.xml')
     getProdutos('https://www.auchan.pt/sitemap_1-product.xml')
     
-    fields = ['NAME','BRAND','QUANTITY','PRICE','PPU','OLDPRICE','EAN']
+    fields = ['Nome', 'Marca', 'Quantidade',
+              'Preço Primário', 'Preço Por Unidade', 'Promo','EAN']
     print(products)
     with open('products.csv','w') as csvfile :
         csvwriter = csv.writer(csvfile)

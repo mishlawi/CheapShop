@@ -46,7 +46,7 @@ def getProdutosPagina(link):
         #     marca += regex + ' '
         # marca = marca.strip()
 
-        if quantity := re.search(r'(\(\d+[^()]+?\)|\d+((x|,|\.)\d+)?[^0-9()a-zA-Z]+?\w{,3})$', nomeProduto):
+        if quantity := re.search(r'(\(\d+[^()]+?\)|\d+((x|,|\.)\d+)?([^0-9()a-zA-Z]+)?(\w{,3}|unidades))$', nomeProduto):
             quantity = quantity.group(0)
             nomeProduto = nomeProduto.replace(quantity, '').strip()
 

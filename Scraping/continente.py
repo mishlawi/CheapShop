@@ -70,23 +70,23 @@ def getProdutosPagina(link):
                                                       tag.get('class') == ['dropdown-item'], recursive=False)
                 for subcategoryelem in subcategorieslist:
                     subcategorylink2 = subcategoryelem.find(['a'])["href"]
-                    print(subcategorylink2)
+                    # print(subcategorylink2)
                     categorylinks[subcategorylink2] = categorylinks[categorylink] + \
                         '-' + subcategorylink2.split('/')[-2].split('-')[0]
-                    print('added', list(categorylinks.keys())[-1])
+                    #print('added', list(categorylinks.keys())[-1])
             else:
                 for subcategoryelem in subcategorieslist:
                     subcategorylink2 = subcategoryelem.find(['a'])["href"]
                     label2 = subcategoryelem.find(['ul'])["aria-label"]
-                    print(subcategorylink2)
+                    # print(subcategorylink2)
                     if not "-marcas" in label2:
                         categorylinks[subcategorylink2] = label2
-                        print('added', list(categorylinks.keys())[-1])
+                        #print('added', list(categorylinks.keys())[-1])
                         labelelem[label2] = subcategoryelem
             keys = list(categorylinks.keys())
             continue
 
-        print(totalproducts)
+        # print(totalproducts)
 
         for j in range(0, int(totalproducts), 2000):
             if (int(totalproducts) <= 36):
@@ -100,7 +100,7 @@ def getProdutosPagina(link):
             products = soup.find_all(
                 ['div'], class_="col-12 col-sm-3 col-lg-2 productTile")
 
-            print('total', len(products))
+            #print('total', len(products))
             for product in products:
 
                 name = product.find(
@@ -114,19 +114,22 @@ def getProdutosPagina(link):
                     ['span'], class_="sales ct-tile--price-primary")
                 sp = product.find(['div'], class_="ct-tile--price-secondary")
 
-                ppu = pp.find(['span'], class_="ct-price-formatted").text.strip() + \
-                    pp.find(['span'], class_="ct-m-unit").text.strip()
+                promo = None
+                price = None
+                if product.find('span', class_='value ct-tile--price-value'):
+                    price = product.find(
+                        'span', class_='value ct-tile--price-value')['content']
+                    promo = pp.find(['span'], class_="value")['content']
+                else:
+                    price = pp.find(['span'], class_="value")['content']
+
                 if sp:
                     spu = sp.find(['span'], class_="ct-price-value").text.strip() + \
                         sp.find(['span'], class_="ct-m-unit").text.strip()
                 else:
                     spu = None
-                promo = None
 
-                rows.add((name, productbrand, productquantity, ppu, spu, promo))
-                print(name)
-                print(ppu)
-                print(spu)
+                rows.add((name, productbrand, productquantity, price, spu, promo))
 
     csvwriter.writerows(rows)
 
