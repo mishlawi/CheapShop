@@ -123,8 +123,10 @@ def processCategory(categorylink):
         price = productelem.find('div', class_='div_preco')
         if price:
             price = price.text.strip()
+            price = float(price.replace(',', '.')[:price.find('€')])
         else:
             price = None
+
         ppu = productelem.find('div', class_='div_preco_peq')
         if ppu:
             ppu = ppu.text.strip()

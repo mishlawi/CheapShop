@@ -17,17 +17,6 @@ def getProdutosPagina(link):
     tags = soup.find(["div"], class_="product-list--row")
     produtos = tags.find_all(["a"])
 
-    # CSV BUILD
-
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
-
-    if not os.path.exists("csvProdutos/ProdutosMP"):
-        os.makedirs("csvProdutos/ProdutosMP")
-    file = 'csvProdutos/ProdutosMP/' + titulo.replace(" ", "").lower()+'.csv'
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
 
     for elem in produtos:
 
@@ -36,7 +25,7 @@ def getProdutosPagina(link):
         quantity = None
 
         marca = None
-        if match := re.match(r'\b[A-ZÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ+\'-_: ]+[^ I]\b', nomeProduto):
+        if match := re.match(r'\b[A-ZÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ+\'-_:! ]+[^ I]\b', nomeProduto):
             marca = match[0].strip()
             nomeProduto = nomeProduto.replace(marca, '').strip()
 
@@ -91,10 +80,7 @@ def getProdutosPagina(link):
                   oldPrice, oldPriceKg, promo))
 
     nextpage = soup.find(["li"], class_="next").find(["a"])["href"]
-    if nextpage == '#':
-        csvwriter.writerows(rows)
-        rows.clear()
-    else:
+    if not nextpage == '#':
         getProdutosPagina("https://www.minipreco.pt" + nextpage)
 
 
@@ -103,6 +89,19 @@ def getPaginas(link):
     soup = BS(html, "html.parser")
     paginasTag = soup.find(["ul"], class_="nav-submenu")
     paginas = paginasTag.find_all(["div"], class_="category-link")
+
+
+    # CSV BUILD
+
+    campos = ['Nome', 'Marca', 'Quantidade',
+              'Preço Primário', 'Preço Por Unidade', 'Promo']
+
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
+    file = 'csvProdutos/ProdutosMP.csv'
+    csvo = open(file, 'w')
+    csvwriter = csv.writer(csvo)
+    csvwriter.writerow(campos)
 
     links = []
     for pagina in paginas:
@@ -115,5 +114,6 @@ def getPaginas(link):
         getProdutosPagina(elem[1])
         print("---->" + elem[0] + "     FEITO")
 
+    csvwriter.writerows(rows)
 
 getPaginas("https://www.minipreco.pt")

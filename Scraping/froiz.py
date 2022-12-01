@@ -31,7 +31,7 @@ def getProdutosPagina(link):
                 categoryid = category.find('a')['href']
                 categoriesids.append(categoryid)
 
-    #print(categoriesids)
+    # print(categoriesids)
 
     subcategorylinks = {}
     for categoryid in categoriesids:
@@ -49,7 +49,7 @@ def getProdutosPagina(link):
 
     # print(len(subcategorylinks))
     for subcategorylink in subcategorylinks:
-        #print(subcategorylinks[subcategorylink])
+        # print(subcategorylinks[subcategorylink])
         htmlsubcategory = requests.get(subcategorylink).text
         soupsubcategory = BS(htmlsubcategory, "html.parser")
 
@@ -60,18 +60,25 @@ def getProdutosPagina(link):
         productelems = soupsubcategory.find_all(
             'div', class_='row-fluid popup-products')
         for productelem in productelems:
-            brand = productelem.find('div',class_='span3 isotope--target')['data-brand']
+            brand = productelem.find(
+                'div', class_='span3 isotope--target')['data-brand']
             productname = productelem.find(
                 'p', class_='push-down-10 isotope--title dproducto').text.strip()
             promo = None
             if productelem.find('h4', class_='title').find_all('span'):
                 promo = productelem.find('h4', class_='title').find(
                     'span', class_='red-clr').text.strip()
+                promo = float(promo.replace(',', '.')[:-1])
                 productprice = productelem.find('h4', class_='title').find(
                     'span', class_='striked').text.strip()
             else:
                 productprice = productelem.find(
                     'h4', class_='title').text.strip()
+            if not productprice:
+                productprice = promo
+            else:
+                productprice = float(productprice.replace(',', '.')[:-1])
+
             productpriceperunit = productelem.find(
                 'div', class_='row-fluid hidden-line').find('div', class_='span8').text.strip()
             quantity = None

@@ -104,9 +104,11 @@ def processStore(storelink):
                 if pricediv.find('p', class_='red-text surligner'):
                     promo = price = pricediv.find(
                         'p', class_='red-text surligner').text.strip()
+                    promo = float(promo.replace(',', '.')[:-1])
                 else:
                     promo = None
                     price = pricediv.find('p', class_='').text.strip()
+                    price = float(price.replace(',', '.')[:-1])
                 ppu = pricediv.find('p', class_=None).text.strip()
 
                 rows.add((name, brand, quantity, price, ppu, promo))
