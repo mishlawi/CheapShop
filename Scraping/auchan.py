@@ -10,7 +10,6 @@ products = set()
 
 def getProdutos(link):
     #xml = open("site.xml").read()
-    
     s = requests.Session()
     xml = s.get(link).text
     soup = BS(xml,features='lxml')
@@ -28,18 +27,17 @@ def getProductInfo(link):
     html = s.get(link).text
     soup = BS(html,features='html.parser')
     try:
-    
-        try:    #promotion
-            tagPromocao = soup.find("span",class_="strike-through value")
-            beforePrice = tagPromocao["content"] + '€'
-        
-        except TypeError:
-            beforePrice = 'None'        
-        
         tagJson = soup.find("script",type="application/ld+json").text
         jsonDic = json.loads(tagJson)
         nome = jsonDic["name"]
         preco = jsonDic["offers"]["price"] + '€'        
+        if soup.find("span",class_="strike-through value")!=None:
+            tagOldPrice = soup.find("span",class_="strike-through value")
+            preco = tagOldPrice["content"] + '€'
+            promo = jsonDic["offers"]["price"] + '€'        
+        else:
+            promo = 'None'        
+        
         ean = soup.find("span",class_="product-ean").text
         if soup.find("span",class_="auc-measures--price-per-unit")!=None: 
             ppu = soup.find("span",class_="auc-measures--price-per-unit").text
@@ -50,6 +48,7 @@ def getProductInfo(link):
             brandTag = soup.find("script",type="application/ld+json").text
             brandJson = json.loads(brandTag)
             brand = brandJson["brand"]["name"]
+        
         except KeyError:
             brand = 'None'
         
@@ -66,7 +65,7 @@ def getProductInfo(link):
                 elif qnt == 'UN':
                     qnt == '1 UN'
 
-        products.add((nome,brand,qnt,preco,ppu,beforePrice,ean))
+        products.add((nome,brand,qnt,preco,ppu,promo,ean))
 
 
     except AttributeError:
@@ -87,7 +86,7 @@ def getInfoProdutos():
     print("Writing in csv")
     fields = ['Nome', 'Marca', 'Quantidade',
               'Preço Primário', 'Preço Por Unidade', 'Promo','EAN']
-    print(products)
+    #print(products)
     with open('products.csv','w') as csvfile :
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(fields)
