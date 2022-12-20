@@ -31,11 +31,13 @@ class ThreadWithReturnValue(Thread):
         return self._return
 
 
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+
 def getProdutosPagina(link):
     s = requests.Session()
-    html = s.get(link).text
-    soup = BS(html, "html.parser")
 
+    html = s.get(link,headers=headers).text
+    soup = BS(html, "html.parser")
     lojaselems = soup.find_all('div', class_='menu_ativo')
     linkslojas = [link]
     for lojaelem in lojaselems:
@@ -72,8 +74,9 @@ def processStore(lojalink):
     html = s.get(lojalink).text
     soup = BS(html, "html.parser")
 
+    html = s.get(lojalink,headers=headers).text
+    soup = BS(html, "html.parser")
     print(html)
-
     categoriesdiv = soup.find('div', class_='categorias').find(
         'div', class_='opcoes')
     categoriesnames = categoriesdiv.find_all('a', recursive=False)
@@ -99,15 +102,15 @@ def processCategory(categorylink):
     categorytotal = 0
 
     s = requests.Session()
-    html = s.get(categorylink).text
+    html = s.get(categorylink,headers=headers).text
     soup = BS(html, "html.parser")
 
     productselems = soup.find_all('div', class_='produtos_coluna')
     while not productselems:
         print(productselems, ' productselems')
-        time.sleep(2)
+        
         s = requests.Session()
-        html = s.get(categorylink).text
+        html = s.get(categorylink,headers=headers).text
         soup = BS(html, "html.parser")
         productselems = soup.find_all('div', class_='produtos_coluna')
 
