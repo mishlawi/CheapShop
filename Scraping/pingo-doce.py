@@ -68,9 +68,10 @@ def getProdutosPagina():
                     promo = round(float(product['buyingPrice'], 2))
                 else:
                     promo = None
-                quantity = product['capacity'].lower()
-                quantity = sub('l', 'lt', quantity)
+                quantity = product['capacity']
+                quantity = sub('L', 'lt', quantity)
                 quantity = sub('metros', 'mt', quantity)
+                quantity = quantity.lower()
 
 
                 ppu = regra3simples(product['buyingPrice'], product['netContent'])

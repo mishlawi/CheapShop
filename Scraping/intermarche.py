@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup as BS
 from threading import Thread
 import requests
 import csv
+from re import *
 
 
 class ThreadWithReturnValue(Thread):
@@ -101,6 +102,57 @@ def processStore(storelink):
                 name = infodiv.find(lambda tag: tag.name == 'p' and tag.get(
                     'class') == None).text.strip()
                 quantity = infodiv.find('span').text.strip()
+                quantity = sub(r'Vendido.+', '', quantity)
+                quantity = sub(r'Venda ao Kilo', '', quantity)
+                quantity = sub(r'(\d+)Unidades', '\1 un', quantity)
+                quantity = sub(r'^unidade$', '1 un', quantity)
+                quantity = sub(r'(u|U)nidade(s?)', 'un', quantity)
+                quantity = sub(r'Uma embalagem de ', '', quantity)
+                quantity = sub(r'Uma embalagem com', '', quantity)
+                quantity = sub(r'Uma embalagem - ', '', quantity)
+                quantity = sub(r'embalagem', '', quantity)
+                quantity = sub(r'Saqueta de ', '', quantity)
+                quantity = sub(r'Pescado no mar', '', quantity)
+                quantity = sub(r'pasta.+', '', quantity)
+                quantity = sub(r'Pack Poupança de ', '', quantity)
+                quantity = sub(r'pack familiar de ', '', quantity)
+                quantity = sub(r'pack de ', '', quantity)
+                quantity = sub(r'(L|l)ata de ', '', quantity)
+                quantity = sub(r'(P|p)ack:? ', '', quantity)
+                quantity = sub(r'(G|g)arrafão de ', '', quantity)
+                quantity = sub(r'(G|g)arrafa de vidro ', '', quantity)
+                quantity = sub(r'(G|g)arrafa de ', '', quantity)
+                quantity = sub(r'(litro(s?))|L', 'l', quantity)
+                quantity = sub(r' c/ Caixa de Madeira', '', quantity)
+                quantity = sub(r'(\d+)L', '\1 l', quantity)
+                quantity = sub(r'(\d+)(\w)', '\1 \2', quantity)
+                quantity = sub(r'(F|f)rasco de ', '', quantity)
+                quantity = sub(r'(F|f)rasco com ', '', quantity)
+                quantity = sub(r'Embalagem:? ', '', quantity)
+                quantity = sub(r'Embalagem sortida com ', '', quantity)
+                quantity = sub(r'Embalagem ML', '', quantity)
+                quantity = sub(r'Embalagem de', '', quantity)
+                quantity = sub(r'\+ Oferta de 1 Copo', '', quantity)
+                quantity = sub(r'\+-', '', quantity)
+                quantity = sub(r'(E|e)mbalagem com rosca de ', '', quantity)
+                quantity = sub(r'(E|e)mbalagem com ', '', quantity)
+                quantity = sub(r'(E|e)mbalagem c/ ', '', quantity)
+                quantity = sub(r'\.$', '', quantity)
+                quantity = sub(r'cubos', 'un', quantity)
+                quantity = sub(r'^T.+', '', quantity)
+                quantity = sub(r'^Dim.+', '', quantity)
+                quantity = sub(r'Conjunto.+', '', quantity)
+                quantity = sub(r'^Congelada.+', '', quantity)
+                quantity = sub(r'^(C|c).+', '', quantity)
+                quantity = sub(r'Boião de ', '', quantity)
+                quantity = sub(r'Bag-in-box de ', '', quantity)
+                quantity = sub(r', 1 embalagem', '', quantity)
+                quantity = sub(r',', '.', quantity)
+                quantity = sub(r'Uma', '1', quantity)
+                quantity = sub(r' embaladas individualmente', '', quantity)
+
+
+
                 if pricediv.find('p', class_='red-text surligner'):
                     promo = price = pricediv.find(
                         'p', class_='red-text surligner').text.strip()

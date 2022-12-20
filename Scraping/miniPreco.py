@@ -39,6 +39,13 @@ def getProdutosPagina(link):
             quantity = quantity.group(0)
             nomeProduto = nomeProduto.replace(quantity, '').strip()
 
+            quantity = re.sub(r'L', 'lt', quantity)
+            quantity = re.sub(r',', '.', quantity)
+            quantity = re.sub(r'\(.+?\)', '', quantity)
+            quantity = quantity.lower()
+
+
+
         # tag com a tag com o preço e a tag com o preço/kg
         tagPrecosGeral = elem.find(["div"], class_="price_container")
         tagPrecos = tagPrecosGeral.find(
