@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup as BS
 from threading import Thread
 import requests
 import csv
+from re import *
 
 
 class ThreadWithReturnValue(Thread):
@@ -103,12 +104,31 @@ def getProdutosPagina(link):
             #print('total', len(products))
             for product in products:
 
-                name = product.find(
-                    ['a'], class_="ct-tile--description").text.strip()
+                try:
+                    name = product.find(
+                        ['a'], class_="ct-tile--description").text.strip()
+                except:
+                    continue
                 productbrand = product.find(['p'], class_="ct-tile--brand").text.strip(
                 ) if product.find(['p'], class_="ct-tile--brand") else None
                 productquantity = product.find(
                     ['p'], class_="ct-tile--quantity").text.strip() if product.find(['p'], class_="ct-tile--quantity") else None
+
+                productquantity = sub(r'^emb\. ?', '', productquantity)
+                productquantity = sub(r',', '.', productquantity)
+                productquantity = sub(r'\(.+?\)', '', productquantity)
+                productquantity = sub(r'(g|G)arrafa ', '', productquantity)
+                productquantity = sub(r'lata ', '', productquantity)
+                productquantity = sub(r'gr', 'g', productquantity)
+                productquantity = sub(r'\d+ rolos = ', '', productquantity)
+                productquantity = sub(r'NULL ', '', productquantity)
+                productquantity = sub(r'Várias quantidades', '', productquantity)
+                productquantity = sub(r'Bag im Box ', '', productquantity)
+                productquantity = sub(r'barril ', '', productquantity)
+
+                if match(r'Quant\. Mínima ?=', productquantity):
+                    productquantity = None  
+
 
                 pp = product.find(
                     ['span'], class_="sales ct-tile--price-primary")
@@ -126,6 +146,7 @@ def getProdutosPagina(link):
                 if sp:
                     spu = sp.find(['span'], class_="ct-price-value").text.strip() + \
                         sp.find(['span'], class_="ct-m-unit").text.strip()
+                    spu = sub(r',', '.', spu)
                 else:
                     spu = None
 

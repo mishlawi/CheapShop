@@ -138,6 +138,11 @@ def processCategory(categoryLink):
             quantity = None
             if quantity := re.search(r'(\(\d+[^()]+?\)|\d+((x|,|\.)\d+)?([^0-9()a-zA-Z]+)?(\w{,3}|unidades))$', name):
                 quantity = quantity.group(0)
+                quantity = re.sub(r'unidade(s)?', 'un', quantity)
+                quantity = re.sub(r'L', 'lt', quantity)
+                quantity = re.sub(r',', '.', quantity)
+                
+
                 name = name.replace(quantity, '').strip()
                 name = name.replace('embalagem', '').strip()
             local_rows.add((name, brand, quantity, price, ppu, promo))

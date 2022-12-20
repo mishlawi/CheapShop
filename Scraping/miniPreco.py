@@ -9,8 +9,8 @@ rows = set()
 
 
 def getProdutosPagina(link):
-
-    html = requests.get(link).text
+    s = requests.Session()
+    html = s.get(link).text
     soup = BS(html, "html.parser")
     titulo = soup.find(["meta"], property="og:description")["content"]
 
@@ -85,7 +85,8 @@ def getProdutosPagina(link):
 
 
 def getPaginas(link):
-    html = requests.get(link).text
+    s = requests.Session()
+    html = s.get(link).text
     soup = BS(html, "html.parser")
     paginasTag = soup.find(["ul"], class_="nav-submenu")
     paginas = paginasTag.find_all(["div"], class_="category-link")

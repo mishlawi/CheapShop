@@ -84,6 +84,11 @@ def getProdutosPagina(link):
             quantity = None
             if quantity := re.search(r'(\(\d+[^()]+?\)|\d+((x|,|\.)\d+)?([^0-9()a-zA-Z]+)?(\w{,3}|unidades))$', productname):
                 quantity = quantity.group(0)
+                quantity = re.sub(r'unidade(s)?', 'un', quantity)
+                quantity = re.sub(r'l', 'lt', quantity)
+                quantity = re.sub(r',', '.', quantity)
+
+
                 productname = productname.replace(quantity, '').strip()
                 productname = productname.replace('embalagem', '').strip()
             rows.add((productname, brand, quantity, productprice,

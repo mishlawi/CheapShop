@@ -10,7 +10,7 @@ APIPRODUTOS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/produ
 
 
 def regra3simples(preco, quantidade, pretendido=1):
-    return pretendido*float(preco)/float(quantidade)
+    return round(pretendido*float(preco)/float(quantidade), 2)
 
 
 def getProdutosPagina():
@@ -63,12 +63,16 @@ def getProdutosPagina():
                 #     continue
                 name = product['firstName']
                 brand = product['brand']['name']
-                price = product['regularPrice']
+                price = round(float(product['regularPrice'],2))
                 if price != product['buyingPrice']:
-                    promo = product['buyingPrice']
+                    promo = round(float(product['buyingPrice'], 2))
                 else:
                     promo = None
-                quantity = product['capacity']
+                quantity = product['capacity'].lower()
+                quantity = sub('l', 'lt', quantity)
+                quantity = sub('metros', 'mt', quantity)
+
+
                 ppu = regra3simples(product['buyingPrice'], product['netContent'])
                 try:
                     ean = product['eans'][0]
