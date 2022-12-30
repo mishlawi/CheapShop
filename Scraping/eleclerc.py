@@ -13,6 +13,7 @@ import requests
 import csv
 import re
 import time
+import json
 
 
 class ThreadWithReturnValue(Thread):
@@ -62,14 +63,16 @@ def processStore(lojalink):
     #print('loja: ',localstore)
 
     # CSV BUILD
-    rows = set()
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
-    file = f"csvProdutos/ProdutosEleclerc/ProdutosEleclerc_{localstore}.csv"
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
+    #rows = set()
+    # campos = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo']
+    # file = f"csvProdutos/ProdutosEleclerc/ProdutosEleclerc_{localstore}.csv"
+    # csvo = open(file, 'w')
+    # csvwriter = csv.writer(csvo)
+    # csvwriter.writerow(campos)
 
+    data = []
+    
     s = requests.Session()
     html = s.get(lojalink).text
     soup = BS(html, "html.parser")
@@ -90,15 +93,19 @@ def processStore(lojalink):
     # print(categorieslinks)
 
     for categorylink in categorieslinks:
-        for row in processCategory(categorylink):
-            rows.add(row)
+        # for row in processCategory(categorylink):
+        #     rows.add(row)
+        data += processCategory(categorylink)
 
-    csvwriter.writerows(rows)
+    #csvwriter.writerows(rows)
+    json_file = open(f"csvProdutos/ProdutosEleclerc/ProdutosEleclerc_{localstore}.json",'w',encoding='utf-8')
+    json.dump(data,json_file,ensure_ascii=False)
 
 
 def processCategory(categorylink):
     print(threading.current_thread().name, 'started')
     local_rows = set()
+    local_data = []
     categorytotal = 0
 
     s = requests.Session()
@@ -143,10 +150,17 @@ def processCategory(categorylink):
 
         categorytotal += 1
         local_rows.add((name, brand, emb, price, ppu, None))
+        objProduto = {"Nome":name, "Marca":brand, "Quantidade":emb, "Preço Primário":price,
+                    "Preço Por Unidade":ppu, "Promo":None}
+        if objProduto in local_data:
+            continue
+        
+        local_data.append(objProduto)
 
     print('    products added for', categorylink.split(
         '/')[-2], ':', categorytotal)
-    return local_rows
+    #return local_rows
+    return local_data
 
 
 getProdutosPagina('https://online.e-leclerc.pt/hipermercado-braga/')

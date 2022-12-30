@@ -10,6 +10,7 @@ import requests
 import json
 import csv
 import re
+from unidecode import unidecode
 
 
 class ThreadWithReturnValue(Thread):
@@ -29,15 +30,18 @@ class ThreadWithReturnValue(Thread):
 
 
 def getProdutosPagina(link):
-    rows = set()
+    #rows = set()
+    data = []
 
     # CSV BUILD
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
-    file = 'csvProdutos/ProdutosElCorteIngles.csv'
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
+    # campos = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo']
+    # file = 'csvProdutos/ProdutosElCorteIngles.csv'
+    # csvo = open(file, 'w')
+    # csvwriter = csv.writer(csvo)
+    # csvwriter.writerow(campos)
+
+    json_file = open('csvProdutos/ProdutosElCorteIngles.json','w', encoding='utf-8')
 
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36',
                "Accept-Language": "en-US,en;q=0.5"}
@@ -62,14 +66,17 @@ def getProdutosPagina(link):
         scrappingWorker.start()
 
     for scrappingWorker in scrappingWorkers:
-        for row in scrappingWorker.join():
-            rows.add(row)
+        # for row in scrappingWorker.join():
+        #     rows.add(row)
+        data += scrappingWorker.join()
 
-    csvwriter.writerows(rows)
+    #csvwriter.writerows(rows)
+    json.dump(data,json_file,ensure_ascii=False)
 
 
 def processCategory(categoryLink):
     local_rows = set()
+    local_data = []
 
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36',
                "Accept-Language": "en-US,en;q=0.5"}
@@ -146,6 +153,12 @@ def processCategory(categoryLink):
                 name = name.replace(quantity, '').strip()
                 name = name.replace('embalagem', '').strip()
             local_rows.add((name, brand, quantity, price, ppu, promo))
+            objProduto = {"Nome":name, "Marca":brand, "Quantidade":quantity, "Preço Primário":price,
+                    "Preço Por Unidade":ppu, "Promo":promo}
+            if objProduto in local_data:
+                continue
+            
+            local_data.append(objProduto)
 
         if newpage:
             nextpagelink = categoryLink + '/' + newpage['href'].split('/')[-2]
@@ -171,7 +184,8 @@ def processCategory(categoryLink):
             break
 
     print('category: ', categoryLink.split('/')[-1])
-    return local_rows
+    #return local_rows
+    return local_data
 
 
 getProdutosPagina('https://www.elcorteingles.pt/supermercado/')

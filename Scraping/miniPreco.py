@@ -4,8 +4,10 @@ import requests
 import csv
 import os
 import re
+import json
 
-rows = set()
+#rows = set()
+data = []
 
 
 def getProdutosPagina(link):
@@ -83,8 +85,14 @@ def getProdutosPagina(link):
 
         #! Ha um codigo de produto (penso que seja só interno)
         # adding old price and old price per unit and then the promo price, if no promo, field stays blank
-        rows.add((nomeProduto, marca, quantity,
-                  oldPrice, oldPriceKg, promo))
+        #rows.add((nomeProduto, marca, quantity, oldPrice, oldPriceKg, promo))
+        objProduto = {"Nome":nomeProduto, "Marca":marca, "Quantidade":quantity, "Preço Primário":oldPrice,
+                    "Preço Por Unidade":oldPriceKg, "Promo":promo}
+        if objProduto in data:
+            continue
+        
+        data.append(objProduto)
+        
 
     nextpage = soup.find(["li"], class_="next").find(["a"])["href"]
     if not nextpage == '#':
@@ -101,15 +109,15 @@ def getPaginas(link):
 
     # CSV BUILD
 
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
+    # campos = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo']
 
-    if not os.path.exists("csvProdutos"):
-        os.makedirs("csvProdutos")
-    file = 'csvProdutos/ProdutosMP.csv'
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
+    # if not os.path.exists("csvProdutos"):
+    #     os.makedirs("csvProdutos")
+    # file = 'csvProdutos/ProdutosMP.csv'
+    # csvo = open(file, 'w')
+    # csvwriter = csv.writer(csvo)
+    # csvwriter.writerow(campos)
 
     links = []
     for pagina in paginas:
@@ -122,6 +130,8 @@ def getPaginas(link):
         getProdutosPagina(elem[1])
         print("---->" + elem[0] + "     FEITO")
 
-    csvwriter.writerows(rows)
+    #csvwriter.writerows(rows)
+    json_file = open('csvProdutos/ProdutosMP.json','w',encoding='utf-8')
+    json.dump(data,json_file,ensure_ascii=False)
 
 getPaginas("https://www.minipreco.pt")

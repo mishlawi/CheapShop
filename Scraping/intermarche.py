@@ -3,6 +3,7 @@ from threading import Thread
 import requests
 import csv
 from re import *
+import json
 
 
 class ThreadWithReturnValue(Thread):
@@ -54,14 +55,15 @@ def processStore(storelink):
     print(storelink)
 
     # CSV BUILD
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
-    file = f"csvProdutos/ProdutosIntermarche/ProdutosIntermarche_{storelink.split('/')[-1]}.csv"
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
+    # campos = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo']
+    # file = f"csvProdutos/ProdutosIntermarche/ProdutosIntermarche_{storelink.split('/')[-1]}.csv"
+    # csvo = open(file, 'w')
+    # csvwriter = csv.writer(csvo)
+    # csvwriter.writerow(campos)
 
-    rows = set()
+    #rows = set()
+    data = []
 
     s = requests.Session()
     html = s.get(storelink).text
@@ -151,8 +153,6 @@ def processStore(storelink):
                 quantity = sub(r'Uma', '1', quantity)
                 quantity = sub(r' embaladas individualmente', '', quantity)
 
-
-
                 if pricediv.find('p', class_='red-text surligner'):
                     promo = price = pricediv.find(
                         'p', class_='red-text surligner').text.strip()
@@ -163,13 +163,21 @@ def processStore(storelink):
                     price = float(price.replace(',', '.')[:-1])
                 ppu = pricediv.find('p', class_=None).text.strip()
 
-                rows.add((name, brand, quantity, price, ppu, promo))
+                #rows.add((name, brand, quantity, price, ppu, promo))
+                objProduto = {"Nome": name, "Marca": brand, "Quantidade": quantity, "Preço Primário": price,
+                              "Preço Por Unidade": ppu, "Promo": promo}
+                if objProduto in data:
+                    continue
+
+                data.append(objProduto)
         else:
             s.close()
             break
         s.close()
 
-    csvwriter.writerows(rows)
+    #csvwriter.writerows(rows)
+    json_file = open(f"csvProdutos/ProdutosIntermarche/ProdutosIntermarche_{storelink.split('/')[-1]}.json",'w',encoding='utf-8')
+    json.dump(data,json_file)
 
 
 getProdutosPagina('https://www.intermarche.pt/lojas/?q=online')

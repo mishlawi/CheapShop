@@ -2,19 +2,24 @@ from bs4 import BeautifulSoup as BS
 import requests
 import csv
 import re
+import json
+from unidecode import unidecode
 
 
 def getProdutosPagina(link):
-    rows = set()
+    #rows = set()
     total = 0
 
     # CSV BUILD
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
-    file = 'csvProdutos/ProdutosFroiz.csv'
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
+    # campos = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo']
+    # file = 'csvProdutos/ProdutosFroiz.csv'
+    # csvo = open(file, 'w')
+    # csvwriter = csv.writer(csvo,delimiter=';')
+    # csvwriter.writerow(campos)
+
+    json_file = open('csvProdutos/ProdutosFroiz.json', 'w', encoding='utf8')
+    data = []
 
     html = requests.get(link).text
     soup = BS(html, "html.parser")
@@ -91,10 +96,19 @@ def getProdutosPagina(link):
 
                 productname = productname.replace(quantity, '').strip()
                 productname = productname.replace('embalagem', '').strip()
-            rows.add((productname, brand, quantity, productprice,
-                     productpriceperunit, promo))
+            #rows.add((productname, brand, quantity, productprice,
+            #         productpriceperunit, promo))
+            objProduto = {"Nome":productname, "Marca":brand, "Quantidade":quantity, "Preço Primário":productprice,
+                     "Preço Por Unidade":productpriceperunit, "Promo":promo}
+            if objProduto in data:
+                continue
+            
+            data.append(objProduto)
 
-    csvwriter.writerows(rows)
+
+
+    #csvwriter.writerows(rows)
+    json.dump(data,json_file,ensure_ascii=False)
     print(total)
 
 

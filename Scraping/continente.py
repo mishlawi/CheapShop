@@ -3,6 +3,8 @@ from threading import Thread
 import requests
 import csv
 from re import *
+import json
+from unidecode import unidecode
 
 
 class ThreadWithReturnValue(Thread):
@@ -22,15 +24,18 @@ class ThreadWithReturnValue(Thread):
 
 
 def getProdutosPagina(link):
-    rows = set()
+    #rows = set()
 
     # CSV BUILD
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
-    file = 'csvProdutos/ProdutosContinente.csv'
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
+    # campos = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo']
+    # file = 'csvProdutos/ProdutosContinente.csv'
+    # csvo = open(file, 'w')
+    # csvwriter = csv.writer(csvo)
+    # csvwriter.writerow(campos)
+
+    json_file = open('csvProdutos/ProdutosContinente.json', 'w', encoding='utf8')
+    data = []
 
     html = requests.get(link).text
     soup = BS(html, "html.parser")
@@ -122,13 +127,13 @@ def getProdutosPagina(link):
                 productquantity = sub(r'gr', 'g', productquantity)
                 productquantity = sub(r'\d+ rolos = ', '', productquantity)
                 productquantity = sub(r'NULL ', '', productquantity)
-                productquantity = sub(r'Várias quantidades', '', productquantity)
+                productquantity = sub(
+                    r'Várias quantidades', '', productquantity)
                 productquantity = sub(r'Bag im Box ', '', productquantity)
                 productquantity = sub(r'barril ', '', productquantity)
 
                 if match(r'Quant\. Mínima ?=', productquantity):
-                    productquantity = None  
-
+                    productquantity = None
 
                 pp = product.find(
                     ['span'], class_="sales ct-tile--price-primary")
@@ -150,9 +155,17 @@ def getProdutosPagina(link):
                 else:
                     spu = None
 
-                rows.add((name, productbrand, productquantity, price, spu, promo))
+                #rows.add((name, productbrand, productquantity, price, spu, promo))
 
-    csvwriter.writerows(rows)
+                objProduto = {"Nome": name, "Marca": productbrand, "Quantidade": productquantity, "Preço Primário": price,
+                              "Preço Por Unidade": spu, "Promo": promo}
+                if objProduto in data:
+                    continue
+
+                data.append(objProduto)
+
+    #csvwriter.writerows(rows)
+    json.dump(data, json_file,ensure_ascii=False)
 
 
 getProdutosPagina('https://www.continente.pt')
