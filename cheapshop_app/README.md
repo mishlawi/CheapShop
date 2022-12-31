@@ -1,8 +1,13 @@
 # CheapShop WebApp – Session Management
 
-To run the app you must have mongo installed and running, and to make the connection from the app to mongo you need to create a file named `.env` (on the root directory) and add the following key=value pair: `MONGODB_URI=<your mongodb connection URI>` to the file.
+To run the app you must have mysql installed and running and the database schema created on the server, to make the connection from the app to mysql you need to create a file named `.env` (on the root directory) and add the following key=value pairs:
 
-The URI must be something like `mongodb://<ip>:<port>/<collection name>`
+```
+MYSQL_HOST=<host>
+MYSQL_USER=<user>
+MYSQL_PASSWORD=<password>
+MYSQL_DATABASE=<database_name>
+```
 
 Run following commands to start the app:
 

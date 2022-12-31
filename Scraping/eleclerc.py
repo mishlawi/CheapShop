@@ -14,6 +14,7 @@ import csv
 import re
 import time
 import json
+import os
 
 
 class ThreadWithReturnValue(Thread):
@@ -79,7 +80,7 @@ def processStore(lojalink):
 
     html = s.get(lojalink,headers=headers).text
     soup = BS(html, "html.parser")
-    print(html)
+    #print(html)
     categoriesdiv = soup.find('div', class_='categorias').find(
         'div', class_='opcoes')
     categoriesnames = categoriesdiv.find_all('a', recursive=False)
@@ -98,6 +99,8 @@ def processStore(lojalink):
         data += processCategory(categorylink)
 
     #csvwriter.writerows(rows)
+    if not os.path.exists("csvProdutos/ProdutosEleclerc"):
+        os.makedirs("csvProdutos/ProdutosEleclerc")
     json_file = open(f"csvProdutos/ProdutosEleclerc/ProdutosEleclerc_{localstore}.json",'w',encoding='utf-8')
     json.dump(data,json_file,ensure_ascii=False)
 

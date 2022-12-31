@@ -5,7 +5,8 @@ var User = require("./db_conn");
 
 function initialize(passport) {
   const authenticateUser = async (email, password, done) => {
-    const user = await User.getUserByEmail(email);
+    var user = await User.get_user_by_email(email);
+    console.log(user);
     if (user == null) {
       return done(null, false, { message: "No user with that email" });
     }
@@ -22,8 +23,10 @@ function initialize(passport) {
   };
   passport.use(new LocalStrategy({ usernameField: "email" }, authenticateUser));
 
-  passport.serializeUser((user, done) => done(null, user._id));
-  passport.deserializeUser( async (id, done) => done(null, await User.getUserById(id)));
+  passport.serializeUser((user, done) => done(null, user.iduser));
+  passport.deserializeUser(async (id, done) =>
+    done(null, await User.get_user_by_id(id))
+  );
 }
 
 module.exports = initialize;

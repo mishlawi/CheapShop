@@ -98,7 +98,9 @@ def getInfoProdutos():
     #     csvwriter.writerow(fields)
     #     for elem in products:
     #         csvwriter.writerow(elem)
-            
+    
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
     json_file = open('csvProdutos/ProdutosAuchan.json', 'w',encoding='utf-8')
     json.dump(data,json_file,ensure_ascii=False)
    

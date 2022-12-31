@@ -34,7 +34,6 @@ def getProdutosPagina(link):
     # csvwriter = csv.writer(csvo)
     # csvwriter.writerow(campos)
 
-    json_file = open('csvProdutos/ProdutosContinente.json', 'w', encoding='utf8')
     data = []
 
     html = requests.get(link).text
@@ -165,6 +164,9 @@ def getProdutosPagina(link):
                 data.append(objProduto)
 
     #csvwriter.writerows(rows)
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
+    json_file = open('csvProdutos/ProdutosContinente.json', 'w', encoding='utf8')
     json.dump(data, json_file,ensure_ascii=False)
 
 

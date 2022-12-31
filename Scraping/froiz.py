@@ -17,8 +17,6 @@ def getProdutosPagina(link):
     # csvo = open(file, 'w')
     # csvwriter = csv.writer(csvo,delimiter=';')
     # csvwriter.writerow(campos)
-
-    json_file = open('csvProdutos/ProdutosFroiz.json', 'w', encoding='utf8')
     data = []
 
     html = requests.get(link).text
@@ -108,6 +106,9 @@ def getProdutosPagina(link):
 
 
     #csvwriter.writerows(rows)
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
+    json_file = open('csvProdutos/ProdutosFroiz.json', 'w', encoding='utf8')
     json.dump(data,json_file,ensure_ascii=False)
     print(total)
 

@@ -131,6 +131,9 @@ def getPaginas(link):
         print("---->" + elem[0] + "     FEITO")
 
     #csvwriter.writerows(rows)
+
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
     json_file = open('csvProdutos/ProdutosMP.json','w',encoding='utf-8')
     json.dump(data,json_file,ensure_ascii=False)
 

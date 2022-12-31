@@ -24,7 +24,6 @@ def getProdutosPagina():
     # csvwriter = csv.writer(csvo,delimiter=';')
     # csvwriter.writerow(campos)
 
-    json_file = open('csvProdutos/ProdutosPingoDoce.json','w',encoding='utf-8')
 
     #rows = set()
     data = []
@@ -100,6 +99,10 @@ def getProdutosPagina():
                 time.sleep(60)
 
     #csvwriter.writerows(rows)
+
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
+    json_file = open('csvProdutos/ProdutosPingoDoce.json','w',encoding='utf-8')
     json.dump(data,json_file,ensure_ascii=False)
     # print(f'getted {len(produtos)} products')
 

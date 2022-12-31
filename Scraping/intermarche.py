@@ -4,6 +4,7 @@ import requests
 import csv
 from re import *
 import json
+import os
 
 
 class ThreadWithReturnValue(Thread):
@@ -23,6 +24,7 @@ class ThreadWithReturnValue(Thread):
 
 
 def getProdutosPagina(link):
+    print('getting store links...')
     html = requests.get(link).text
     soup = BS(html, "html.parser")
 
@@ -176,6 +178,8 @@ def processStore(storelink):
         s.close()
 
     #csvwriter.writerows(rows)
+    if not os.path.exists("csvProdutos/ProdutosIntermarche"):
+        os.makedirs("csvProdutos/ProdutosIntermarche")
     json_file = open(f"csvProdutos/ProdutosIntermarche/ProdutosIntermarche_{storelink.split('/')[-1]}.json",'w',encoding='utf-8')
     json.dump(data,json_file)
 

@@ -14,16 +14,17 @@ router.post("/register", checkNotAuthenticated, async (req, res, next) => {
   try {
     const hashPassword = await bcrypt.hash(req.body.password, 10);
 
-    const user = new User({
-      _id: req.body.email,
-      name: req.body.name,
-      email: req.body.email,
-      password: hashPassword,
-    });
-    user.save().then(
-      () => console.log("One entry added"),
-      (err) => console.log(err)
-    );
+    User.register_user(req.body.name, req.body.email, hashPassword, "");
+    // const user = new User({
+    //   _id: req.body.email,
+    //   name: req.body.name,
+    //   email: req.body.email,
+    //   password: hashPassword,
+    // });
+    // user.save().then(
+    //   () => console.log("One entry added"),
+    //   (err) => console.log(err)
+    // );
     res.redirect("/login");
   } catch {
     res.redirect("/register");

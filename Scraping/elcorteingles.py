@@ -41,8 +41,7 @@ def getProdutosPagina(link):
     # csvwriter = csv.writer(csvo)
     # csvwriter.writerow(campos)
 
-    json_file = open('csvProdutos/ProdutosElCorteIngles.json','w', encoding='utf-8')
-
+    
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.76 Safari/537.36',
                "Accept-Language": "en-US,en;q=0.5"}
     html = requests.get(link, headers=headers).text
@@ -71,6 +70,9 @@ def getProdutosPagina(link):
         data += scrappingWorker.join()
 
     #csvwriter.writerows(rows)
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
+    json_file = open('csvProdutos/ProdutosElCorteIngles.json','w', encoding='utf-8')
     json.dump(data,json_file,ensure_ascii=False)
 
 
