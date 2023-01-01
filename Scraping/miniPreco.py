@@ -4,13 +4,15 @@ import requests
 import csv
 import os
 import re
+import json
 
-rows = set()
+#rows = set()
+data = []
 
 
 def getProdutosPagina(link):
-
-    html = requests.get(link).text
+    s = requests.Session()
+    html = s.get(link).text
     soup = BS(html, "html.parser")
     titulo = soup.find(["meta"], property="og:description")["content"]
 
@@ -38,6 +40,13 @@ def getProdutosPagina(link):
         if quantity := re.search(r'(\(\d+[^()]+?\)|\d+((x|,|\.)\d+)?([^0-9()a-zA-Z]+)?(\w{,3}|unidades))$', nomeProduto):
             quantity = quantity.group(0)
             nomeProduto = nomeProduto.replace(quantity, '').strip()
+
+            quantity = re.sub(r'L', 'lt', quantity)
+            quantity = re.sub(r',', '.', quantity)
+            quantity = re.sub(r'\(.+?\)', '', quantity)
+            quantity = quantity.lower()
+
+
 
         # tag com a tag com o preço e a tag com o preço/kg
         tagPrecosGeral = elem.find(["div"], class_="price_container")
@@ -76,8 +85,14 @@ def getProdutosPagina(link):
 
         #! Ha um codigo de produto (penso que seja só interno)
         # adding old price and old price per unit and then the promo price, if no promo, field stays blank
-        rows.add((nomeProduto, marca, quantity,
-                  oldPrice, oldPriceKg, promo))
+        #rows.add((nomeProduto, marca, quantity, oldPrice, oldPriceKg, promo))
+        objProduto = {"Nome":nomeProduto, "Marca":marca, "Quantidade":quantity, "Preço Primário":oldPrice,
+                    "Preço Por Unidade":oldPriceKg, "Promo":promo}
+        if objProduto in data:
+            continue
+        
+        data.append(objProduto)
+        
 
     nextpage = soup.find(["li"], class_="next").find(["a"])["href"]
     if not nextpage == '#':
@@ -85,7 +100,8 @@ def getProdutosPagina(link):
 
 
 def getPaginas(link):
-    html = requests.get(link).text
+    s = requests.Session()
+    html = s.get(link).text
     soup = BS(html, "html.parser")
     paginasTag = soup.find(["ul"], class_="nav-submenu")
     paginas = paginasTag.find_all(["div"], class_="category-link")
@@ -93,15 +109,15 @@ def getPaginas(link):
 
     # CSV BUILD
 
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
+    # campos = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo']
 
-    if not os.path.exists("csvProdutos"):
-        os.makedirs("csvProdutos")
-    file = 'csvProdutos/ProdutosMP.csv'
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
+    # if not os.path.exists("csvProdutos"):
+    #     os.makedirs("csvProdutos")
+    # file = 'csvProdutos/ProdutosMP.csv'
+    # csvo = open(file, 'w')
+    # csvwriter = csv.writer(csvo)
+    # csvwriter.writerow(campos)
 
     links = []
     for pagina in paginas:
@@ -114,6 +130,11 @@ def getPaginas(link):
         getProdutosPagina(elem[1])
         print("---->" + elem[0] + "     FEITO")
 
-    csvwriter.writerows(rows)
+    #csvwriter.writerows(rows)
+
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
+    json_file = open('csvProdutos/ProdutosMP.json','w',encoding='utf-8')
+    json.dump(data,json_file,ensure_ascii=False)
 
 getPaginas("https://www.minipreco.pt")

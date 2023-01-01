@@ -3,6 +3,8 @@ from xml.dom import minidom
 from re import *
 import time
 import csv
+import json
+from unidecode import unidecode
 
 SITEMAP = 'https://mercadao.pt/api/sitemap.xml'
 APIIDS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/categories/slug/'
@@ -10,19 +12,21 @@ APIPRODUTOS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/produ
 
 
 def regra3simples(preco, quantidade, pretendido=1):
-    return pretendido*float(preco)/float(quantidade)
+    return round(pretendido*float(preco)/float(quantidade), 2)
 
 
 def getProdutosPagina():
     # CSV BUILD
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo', 'EAN']
-    file = f"csvProdutos/ProdutosPingoDoce.csv"
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
+    # campos = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo', 'EAN']
+    # file = f"csvProdutos/ProdutosPingoDoce.csv"
+    # csvo = open(file, 'w')
+    # csvwriter = csv.writer(csvo,delimiter=';')
+    # csvwriter.writerow(campos)
 
-    rows = set()
+
+    #rows = set()
+    data = []
 
     s = requests.Session()
     print('getting sitemap...')
@@ -63,19 +67,28 @@ def getProdutosPagina():
                 #     continue
                 name = product['firstName']
                 brand = product['brand']['name']
-                price = product['regularPrice']
+                price = round(float(product['regularPrice']),2)
                 if price != product['buyingPrice']:
-                    promo = product['buyingPrice']
+                    promo = round(float(product['buyingPrice']), 2)
                 else:
                     promo = None
                 quantity = product['capacity']
+                quantity = sub('L', 'lt', quantity)
+                quantity = sub('metros', 'mt', quantity)
+                quantity = quantity.lower()
+
+
                 ppu = regra3simples(product['buyingPrice'], product['netContent'])
                 try:
                     ean = product['eans'][0]
                 except:
                     ean = None
 
-                rows.add((name, brand, quantity, price, ppu, promo, ean))
+                #rows.add((name, brand, quantity, price, ppu, promo, ean))
+                objProduto = {"Nome":name, "Marca":brand, "Quantidade":quantity, "Preço Primário":price, "Preço Por Unidade":ppu, "Promo":promo, "EAN":ean}
+                if objProduto in data:
+                    continue
+                data.append(objProduto)
                 # produtos[product['slug']] = objProduct
             i += 100
             thislink = sub(r'@startPoint@', str(i), link)
@@ -85,7 +98,12 @@ def getProdutosPagina():
                 #print(f'ERROR::: got {len(produtos)} products')
                 time.sleep(60)
 
-    csvwriter.writerows(rows)
+    #csvwriter.writerows(rows)
+
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
+    json_file = open('csvProdutos/ProdutosPingoDoce.json','w',encoding='utf-8')
+    json.dump(data,json_file,ensure_ascii=False)
     # print(f'getted {len(produtos)} products')
 
     # with open('pingo-doce-products.json', 'w') as f:

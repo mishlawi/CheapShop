@@ -5,8 +5,10 @@ import json
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import csv
+from unidecode import unidecode
 
 products = set()
+data = []
 
 def getProdutos(link):
     #xml = open("site.xml").read()
@@ -66,6 +68,10 @@ def getProductInfo(link):
                     qnt == '1 UN'
 
         products.add((nome,brand,qnt,preco,ppu,promo,ean))
+        objProduto = {"Nome":unidecode(nome),"Marca":unidecode(brand),"Quantidade":qnt,"Preço Primário":preco,"Preço Por Unidade":unidecode(ppu),"Promo":promo,"EAN":ean}
+        if not objProduto in data:
+            data.append({"Nome":nome,"Marca":brand,"Quantidade":qnt,"Preço Primário":preco,"Preço Por Unidade":ppu,"Promo":promo,"EAN":ean})
+
 
 
     except AttributeError:
@@ -83,15 +89,20 @@ def getInfoProdutos():
     getProdutos('https://www.auchan.pt/sitemap_1-product.xml')
     print("Finished second sitemap...")
     
-    print("Writing in csv")
-    fields = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo','EAN']
+    #print("Writing in csv")
+    # fields = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo','EAN']
     #print(products)
-    with open('products.csv','w') as csvfile :
-        csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(fields)
-        for elem in products:
-            csvwriter.writerow(elem)
+    # with open('products.csv','w') as csvfile :
+    #     csvwriter = csv.writer(csvfile)
+    #     csvwriter.writerow(fields)
+    #     for elem in products:
+    #         csvwriter.writerow(elem)
+    
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
+    json_file = open('csvProdutos/ProdutosAuchan.json', 'w',encoding='utf-8')
+    json.dump(data,json_file,ensure_ascii=False)
    
     
 #getProductInfo('https://www.auchan.pt/pt/beleza-e-higiene/maquilhagem-e-perfumes/perfumes-senhora/conjunto-sense-collection-calendario-advento-magical/3519949.html')

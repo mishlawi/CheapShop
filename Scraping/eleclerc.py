@@ -13,6 +13,8 @@ import requests
 import csv
 import re
 import time
+import json
+import os
 
 
 class ThreadWithReturnValue(Thread):
@@ -31,11 +33,13 @@ class ThreadWithReturnValue(Thread):
         return self._return
 
 
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+
 def getProdutosPagina(link):
+    s = requests.Session()
 
-    html = requests.get(link).text
+    html = s.get(link,headers=headers).text
     soup = BS(html, "html.parser")
-
     lojaselems = soup.find_all('div', class_='menu_ativo')
     linkslojas = [link]
     for lojaelem in lojaselems:
@@ -60,17 +64,23 @@ def processStore(lojalink):
     #print('loja: ',localstore)
 
     # CSV BUILD
-    rows = set()
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
-    file = f"csvProdutos/ProdutosEleclerc/ProdutosEleclerc_{localstore}.csv"
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
+    #rows = set()
+    # campos = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo']
+    # file = f"csvProdutos/ProdutosEleclerc/ProdutosEleclerc_{localstore}.csv"
+    # csvo = open(file, 'w')
+    # csvwriter = csv.writer(csvo)
+    # csvwriter.writerow(campos)
 
-    html = requests.get(lojalink).text
+    data = []
+    
+    s = requests.Session()
+    html = s.get(lojalink).text
     soup = BS(html, "html.parser")
 
+    html = s.get(lojalink,headers=headers).text
+    soup = BS(html, "html.parser")
+    #print(html)
     categoriesdiv = soup.find('div', class_='categorias').find(
         'div', class_='opcoes')
     categoriesnames = categoriesdiv.find_all('a', recursive=False)
@@ -84,25 +94,33 @@ def processStore(lojalink):
     # print(categorieslinks)
 
     for categorylink in categorieslinks:
-        for row in processCategory(categorylink):
-            rows.add(row)
+        # for row in processCategory(categorylink):
+        #     rows.add(row)
+        data += processCategory(categorylink)
 
-    csvwriter.writerows(rows)
+    #csvwriter.writerows(rows)
+    if not os.path.exists("csvProdutos/ProdutosEleclerc"):
+        os.makedirs("csvProdutos/ProdutosEleclerc")
+    json_file = open(f"csvProdutos/ProdutosEleclerc/ProdutosEleclerc_{localstore}.json",'w',encoding='utf-8')
+    json.dump(data,json_file,ensure_ascii=False)
 
 
 def processCategory(categorylink):
     print(threading.current_thread().name, 'started')
     local_rows = set()
+    local_data = []
     categorytotal = 0
 
-    html = requests.get(categorylink).text
+    s = requests.Session()
+    html = s.get(categorylink,headers=headers).text
     soup = BS(html, "html.parser")
 
     productselems = soup.find_all('div', class_='produtos_coluna')
     while not productselems:
         print(productselems, ' productselems')
-        time.sleep(2)
-        html = requests.get(categorylink).text
+        
+        s = requests.Session()
+        html = s.get(categorylink,headers=headers).text
         soup = BS(html, "html.parser")
         productselems = soup.find_all('div', class_='produtos_coluna')
 
@@ -135,10 +153,17 @@ def processCategory(categorylink):
 
         categorytotal += 1
         local_rows.add((name, brand, emb, price, ppu, None))
+        objProduto = {"Nome":name, "Marca":brand, "Quantidade":emb, "Preço Primário":price,
+                    "Preço Por Unidade":ppu, "Promo":None}
+        if objProduto in local_data:
+            continue
+        
+        local_data.append(objProduto)
 
     print('    products added for', categorylink.split(
         '/')[-2], ':', categorytotal)
-    return local_rows
+    #return local_rows
+    return local_data
 
 
 getProdutosPagina('https://online.e-leclerc.pt/hipermercado-braga/')

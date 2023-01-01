@@ -2,6 +2,9 @@ from bs4 import BeautifulSoup as BS
 from threading import Thread
 import requests
 import csv
+from re import *
+import json
+from unidecode import unidecode
 
 
 class ThreadWithReturnValue(Thread):
@@ -21,15 +24,17 @@ class ThreadWithReturnValue(Thread):
 
 
 def getProdutosPagina(link):
-    rows = set()
+    #rows = set()
 
     # CSV BUILD
-    campos = ['Nome', 'Marca', 'Quantidade',
-              'Preço Primário', 'Preço Por Unidade', 'Promo']
-    file = 'csvProdutos/ProdutosContinente.csv'
-    csvo = open(file, 'w')
-    csvwriter = csv.writer(csvo)
-    csvwriter.writerow(campos)
+    # campos = ['Nome', 'Marca', 'Quantidade',
+    #           'Preço Primário', 'Preço Por Unidade', 'Promo']
+    # file = 'csvProdutos/ProdutosContinente.csv'
+    # csvo = open(file, 'w')
+    # csvwriter = csv.writer(csvo)
+    # csvwriter.writerow(campos)
+
+    data = []
 
     html = requests.get(link).text
     soup = BS(html, "html.parser")
@@ -103,12 +108,31 @@ def getProdutosPagina(link):
             #print('total', len(products))
             for product in products:
 
-                name = product.find(
-                    ['a'], class_="ct-tile--description").text.strip()
+                try:
+                    name = product.find(
+                        ['a'], class_="ct-tile--description").text.strip()
+                except:
+                    continue
                 productbrand = product.find(['p'], class_="ct-tile--brand").text.strip(
                 ) if product.find(['p'], class_="ct-tile--brand") else None
                 productquantity = product.find(
                     ['p'], class_="ct-tile--quantity").text.strip() if product.find(['p'], class_="ct-tile--quantity") else None
+
+                productquantity = sub(r'^emb\. ?', '', productquantity)
+                productquantity = sub(r',', '.', productquantity)
+                productquantity = sub(r'\(.+?\)', '', productquantity)
+                productquantity = sub(r'(g|G)arrafa ', '', productquantity)
+                productquantity = sub(r'lata ', '', productquantity)
+                productquantity = sub(r'gr', 'g', productquantity)
+                productquantity = sub(r'\d+ rolos = ', '', productquantity)
+                productquantity = sub(r'NULL ', '', productquantity)
+                productquantity = sub(
+                    r'Várias quantidades', '', productquantity)
+                productquantity = sub(r'Bag im Box ', '', productquantity)
+                productquantity = sub(r'barril ', '', productquantity)
+
+                if match(r'Quant\. Mínima ?=', productquantity):
+                    productquantity = None
 
                 pp = product.find(
                     ['span'], class_="sales ct-tile--price-primary")
@@ -126,12 +150,24 @@ def getProdutosPagina(link):
                 if sp:
                     spu = sp.find(['span'], class_="ct-price-value").text.strip() + \
                         sp.find(['span'], class_="ct-m-unit").text.strip()
+                    spu = sub(r',', '.', spu)
                 else:
                     spu = None
 
-                rows.add((name, productbrand, productquantity, price, spu, promo))
+                #rows.add((name, productbrand, productquantity, price, spu, promo))
 
-    csvwriter.writerows(rows)
+                objProduto = {"Nome": name, "Marca": productbrand, "Quantidade": productquantity, "Preço Primário": price,
+                              "Preço Por Unidade": spu, "Promo": promo}
+                if objProduto in data:
+                    continue
+
+                data.append(objProduto)
+
+    #csvwriter.writerows(rows)
+    if not os.path.exists("csvProdutos"):
+        os.makedirs("csvProdutos")
+    json_file = open('csvProdutos/ProdutosContinente.json', 'w', encoding='utf8')
+    json.dump(data, json_file,ensure_ascii=False)
 
 
 getProdutosPagina('https://www.continente.pt')
