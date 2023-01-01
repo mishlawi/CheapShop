@@ -9,14 +9,13 @@ const con = mysql.createConnection({
 });
 con.connect();
 
-//TODO – think id should be email or maybe just having email as pk
-const register_user = (name, email, password, address) => {
+const register_user = (email, name, password, address) => {
   var prepared_statement =
-    "INSERT INTO user (name, email, password, address) VALUES (?,?,?,?)";
+    "INSERT INTO user (EmailUser, Nome, Pass, Morada) VALUES (?,?,?,?)";
 
   con.execute(
     prepared_statement,
-    [name, email, password, address],
+    [email, name, password, address],
     function (err, result) {
       if (err) throw err;
       console.log("1 record inserted");
@@ -26,8 +25,7 @@ const register_user = (name, email, password, address) => {
 
 const get_user_by_email = async (email) => {
   return new Promise(data => {
-    var prepared_statement = "SELECT * FROM user WHERE email = ?";
-    var user
+    var prepared_statement = "SELECT * FROM user WHERE EmailUser = ?";
 
     con.execute(prepared_statement, [email], function (err, result) {
       if (err) throw err;
@@ -36,11 +34,11 @@ const get_user_by_email = async (email) => {
   })
 };
 
-const get_user_by_id = async (id) => {
+const get_user_by_id = async (email) => {
   return new Promise(data => {
-    var prepared_statement = "SELECT * FROM user WHERE iduser = ?";
+    var prepared_statement = "SELECT * FROM user WHERE EmailUser = ?";
 
-    con.execute(prepared_statement, [id], function (err, result) {
+    con.execute(prepared_statement, [email], function (err, result) {
       if (err) throw err;
       data(result[0]);
     });

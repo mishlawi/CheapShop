@@ -14,7 +14,7 @@ router.post("/register", checkNotAuthenticated, async (req, res, next) => {
   try {
     const hashPassword = await bcrypt.hash(req.body.password, 10);
 
-    User.register_user(req.body.name, req.body.email, hashPassword, "");
+    User.register_user(req.body.email, req.body.name, hashPassword, "");
     // const user = new User({
     //   _id: req.body.email,
     //   name: req.body.name,

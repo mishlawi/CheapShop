@@ -4,7 +4,7 @@ var { checkAuthenticated, _ } = require("../auth_checks");
 
 /* GET home page. */
 router.get("/", checkAuthenticated, async (req, res, next) => {
-  res.render("index", { name: await req.user.name });
+  res.render("index", { name: await req.user.Nome });
 });
 
 module.exports = router;
