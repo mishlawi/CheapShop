@@ -1,0 +1,31 @@
+{
+  "name": "cheapshop",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cjs": "^0.0.11",
+    "cookie-parser": "^1.4.6",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "express-flash": "^0.0.2",
+    "express-session": "^1.17.3",
+    "http-errors": "~1.6.3",
+    "js-crypto-random": "^1.0.4",
+    "method-override": "^3.0.0",
+    "mongoose": "^6.8.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.3",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.20"
+  }
+}
