@@ -5,6 +5,7 @@ import time
 import csv
 import json
 from unidecode import unidecode
+import os
 
 SITEMAP = 'https://mercadao.pt/api/sitemap.xml'
 APIIDS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/categories/slug/'
@@ -23,7 +24,6 @@ def getProdutosPagina():
     # csvo = open(file, 'w')
     # csvwriter = csv.writer(csvo,delimiter=';')
     # csvwriter.writerow(campos)
-
 
     #rows = set()
     data = []
@@ -55,7 +55,7 @@ def getProdutosPagina():
             page = s.get(thislink).json()['sections']['null']
         except:
             print(thislink)
-            #exit(-1)
+            # exit(-1)
             continue
         total = page['total']
         print(categoria + f' ({total})')
@@ -67,7 +67,7 @@ def getProdutosPagina():
                 #     continue
                 name = product['firstName']
                 brand = product['brand']['name']
-                price = round(float(product['regularPrice']),2)
+                price = round(float(product['regularPrice']), 2)
                 if price != product['buyingPrice']:
                     promo = round(float(product['buyingPrice']), 2)
                 else:
@@ -77,15 +77,18 @@ def getProdutosPagina():
                 quantity = sub('metros', 'mt', quantity)
                 quantity = quantity.lower()
 
-
-                ppu = regra3simples(product['buyingPrice'], product['netContent'])
+                ppu = regra3simples(
+                    product['buyingPrice'], product['netContent'])
                 try:
+                    if len(product['eans']) > 1:
+                        print(product['firstName'], product['eans'])
                     ean = product['eans'][0]
                 except:
                     ean = None
 
                 #rows.add((name, brand, quantity, price, ppu, promo, ean))
-                objProduto = {"Nome":name, "Marca":brand, "Quantidade":quantity, "Preço Primário":price, "Preço Por Unidade":ppu, "Promo":promo, "EAN":ean}
+                objProduto = {"Nome": name, "Marca": brand, "Quantidade": quantity,
+                              "Preço Primário": price, "Preço Por Unidade": ppu, "Promo": promo, "EAN": ean}
                 if objProduto in data:
                     continue
                 data.append(objProduto)
@@ -98,12 +101,13 @@ def getProdutosPagina():
                 #print(f'ERROR::: got {len(produtos)} products')
                 time.sleep(60)
 
-    #csvwriter.writerows(rows)
+    # csvwriter.writerows(rows)
 
     if not os.path.exists("csvProdutos"):
         os.makedirs("csvProdutos")
-    json_file = open('csvProdutos/ProdutosPingoDoce.json','w',encoding='utf-8')
-    json.dump(data,json_file,ensure_ascii=False)
+    json_file = open('csvProdutos/ProdutosPingoDoce.json',
+                     'w', encoding='utf-8')
+    json.dump(data, json_file, ensure_ascii=False)
     # print(f'getted {len(produtos)} products')
 
     # with open('pingo-doce-products.json', 'w') as f:

@@ -6,15 +6,26 @@ const User = require("../db_conn");
 
 /* GET register page. */
 router.get("/register", checkNotAuthenticated, (req, res, next) => {
-  res.render("register");
+  res.render("register", { message: req.flash("error_message") });
 });
 
 /* POST new user. */
 router.post("/register", checkNotAuthenticated, async (req, res, next) => {
   try {
     const hashPassword = await bcrypt.hash(req.body.password, 10);
+    if (!await User.get_user_by_email(req.body.email)) {
+      User.register_user(
+        req.body.email,
+        req.body.name,
+        hashPassword,
+        req.body.address
+      );
+      res.redirect("/login");
+    } else {
+      req.flash("error_message", "Email already registered, please login.");
+      res.render("register", { message: req.flash("error_message") });
+    }
 
-    User.register_user(req.body.email, req.body.name, hashPassword, "");
     // const user = new User({
     //   _id: req.body.email,
     //   name: req.body.name,
@@ -25,8 +36,8 @@ router.post("/register", checkNotAuthenticated, async (req, res, next) => {
     //   () => console.log("One entry added"),
     //   (err) => console.log(err)
     // );
-    res.redirect("/login");
-  } catch {
+  } catch (e){
+    console.log(e);
     res.redirect("/register");
   }
 });
