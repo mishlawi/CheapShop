@@ -63,35 +63,30 @@ def getProdutosPagina():
         while i < total:
             for product in page['products']:
                 product = product['_source']
+                for ean in product['eans']:
                 # if product['slug'] in produtos.keys():
                 #     continue
-                name = product['firstName']
-                brand = product['brand']['name']
-                price = round(float(product['regularPrice']), 2)
-                if price != product['buyingPrice']:
-                    promo = round(float(product['buyingPrice']), 2)
-                else:
-                    promo = None
-                quantity = product['capacity']
-                quantity = sub('L', 'lt', quantity)
-                quantity = sub('metros', 'mt', quantity)
-                quantity = quantity.lower()
+                    name = product['firstName']
+                    brand = product['brand']['name']
+                    price = round(float(product['regularPrice']), 2)
+                    if price != product['buyingPrice']:
+                        promo = round(float(product['buyingPrice']), 2)
+                    else:
+                        promo = None
+                    quantity = product['capacity']
+                    quantity = sub('L', 'lt', quantity)
+                    quantity = sub('metros', 'mt', quantity)
+                    quantity = quantity.lower()
 
-                ppu = regra3simples(
-                    product['buyingPrice'], product['netContent'])
-                try:
-                    if len(product['eans']) > 1:
-                        print(product['firstName'], product['eans'])
-                    ean = product['eans'][0]
-                except:
-                    ean = None
+                    ppu = regra3simples(
+                        product['buyingPrice'], product['netContent'])
 
-                #rows.add((name, brand, quantity, price, ppu, promo, ean))
-                objProduto = {"Nome": name, "Marca": brand, "Quantidade": quantity,
-                              "Preço Primário": price, "Preço Por Unidade": ppu, "Promo": promo, "EAN": ean}
-                if objProduto in data:
-                    continue
-                data.append(objProduto)
+                    #rows.add((name, brand, quantity, price, ppu, promo, ean))
+                    objProduto = {"Nome": name, "Marca": brand, "Quantidade": quantity,
+                                "Preço Primário": price, "Preço Por Unidade": ppu, "Promo": promo, "EAN": ean}
+                    if objProduto in data:
+                        continue
+                    data.append(objProduto)
                 # produtos[product['slug']] = objProduct
             i += 100
             thislink = sub(r'@startPoint@', str(i), link)
