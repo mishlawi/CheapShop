@@ -18,19 +18,19 @@ let con = mysql.createConnection({
 });
 
 // Read JSON file
-const jsonFile = fs.readFileSync('./data.json');
-
+let jsonFile = [fs.readFileSync('C:\\Users\\hugom\\Desktop\\MIEI\\5ANO\\ProdutosAuchan.json'), fs.readFileSync('C:\\Users\\hugom\\Desktop\\MIEI\\5ANO\\ProdutosPingoDoce.json')];
+//const jsonFile0 = fs.readFileSync('C:\\Users\\hugom\\Desktop\\MIEI\\5ANO\\ProdutosAuchan.json');
+//const jsonFile1 = fs.readFileSync('C:\\Users\\hugom\\Desktop\\MIEI\\5ANO\\ProdutosAuchan.json');
+let k = 0;
+let i;
+for (let j = 0; j<jsonFile.length;j++){
 // Parse JSON data
-const jsonData = JSON.parse(jsonFile);
 
-var sql = "INSERT INTO cheapshop.superficie (Nome, IDsup, Website) values('Froiz', 1, 'https://www.froiz.pt');"
-    con.query(sql, function (err, result) {
-      if (err) throw err;
-      console.log("Inserted to SUPERFICIE");
-    });
-
+const Super = ['AUC','PDC','FRO','INM','CON','ECI','ELE'];
+let SUP = Super[j];
+const jsonData = JSON.parse(jsonFile[j]);
 // Loop through the JSON data
-for (let i = 0; i < jsonData.length; i++) {
+for (i = 0; i < jsonData.length; i++) {
   // Extract data from each object in the array
   var Nome = jsonData[i]["Nome"],
       Marca = jsonData[i]["Marca"],
@@ -38,11 +38,10 @@ for (let i = 0; i < jsonData.length; i++) {
       PrecoPrim = jsonData[i]["Preço Primário"],
       PrecoUni = jsonData[i]["Preço Por Unidade"],
       Promo = jsonData[i]["Promo"],
-      //EAN = jsonData[i]["EAN"],
-      IDitem = i,
-      EAN = i,
-      Superficie = 1
+      EAN = jsonData[i]["EAN"],
+      IDitem = k + i
 
+  let Superficie = SUP
   var insertStatement = 
   `INSERT INTO cheapshop.item (Nome, IDitem, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, superficie_IDsup) 
   values(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -50,9 +49,15 @@ for (let i = 0; i < jsonData.length; i++) {
 
   // Insert data into database
   con.query(insertStatement, items, 
-      (err, res) => {
-          console.log(err || res);
+      (err, results, fields) => {
+        if (err) {
+            console.log("Unable to insert item at row ", i + 1);
+                return console.log(err);
+        }
       }
   );
+}
+k += i;
+console.log("All items from", SUP, "stored into database successfully");
 }
 console.log("All items stored into database successfully");
