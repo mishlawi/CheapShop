@@ -18,8 +18,8 @@ let con = mysql.createConnection({
 });
 
 // Read JSON file
-let jsonFile = [fs.readFileSync('C:\\Users\\hugom\\Desktop\\MIEI\\5ANO\\ProdutosAuchan.json'), fs.readFileSync('C:\\Users\\hugom\\Desktop\\MIEI\\5ANO\\ProdutosPingoDoce.json')];
-//const jsonFile0 = fs.readFileSync('C:\\Users\\hugom\\Desktop\\MIEI\\5ANO\\ProdutosAuchan.json');
+let jsonFile = [fs.readFileSync('Data\\ProdutosAuchan.json'), fs.readFileSync('Data\\ProdutosPingoDoce.json')];
+//const jsonFile0 = fs.readFileSync('C:\\Users\\hugom\\Desktop\\MIEI\\5ANO\\CheapShop\\DataBase\\Data\\ProdutosAuchan.json');
 //const jsonFile1 = fs.readFileSync('C:\\Users\\hugom\\Desktop\\MIEI\\5ANO\\ProdutosAuchan.json');
 let k = 0;
 let i;
