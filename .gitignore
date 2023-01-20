@@ -3,3 +3,4 @@ ChipShopDontStop/src/__pycache__/
 .vscode/
 **/.DS_Store
 *.json
+node_modules/
