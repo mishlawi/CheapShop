@@ -12,6 +12,7 @@ APIIDS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/categories
 APIPRODUTOS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/products/search?mainCategoriesIds=["@catID@"]&from=@startPoint@&size=100&esPreference=0.6439211110152693'
 FILENAME = 'csvProdutos/ProdutosPingoDoce.json'
 
+
 def regra3simples(preco, quantidade, pretendido=1):
     return round(pretendido*float(preco)/float(quantidade), 2)
 
@@ -67,9 +68,11 @@ def getProdutosPagina():
                     # if product['slug'] in produtos.keys():
                     #     continue
                     if name := product['firstName']:
-                        name = unidecode(product['firstName'].lower().replace('-',' '))
+                        name = unidecode(
+                            product['firstName'].lower().replace('-', ' '))
                     if brand := product['brand']['name']:
-                        brand = unidecode(product['brand']['name'].lower().replace('-',' '))
+                        brand = unidecode(
+                            product['brand']['name'].lower().replace('-', ' '))
                     price = round(float(product['regularPrice']), 2)
                     if price != product['buyingPrice']:
                         promo = round(float(product['buyingPrice']), 2)
@@ -95,22 +98,25 @@ def getProdutosPagina():
             try:
                 page = s.get(thislink).json()['sections']['null']
             except:
-                #print(f'ERROR::: got {len(produtos)} products')
+                print(f'ERROR::: got {len(data)} products')
                 time.sleep(60)
 
     # csvwriter.writerows(rows)
 
-    if not os.path.exists("csvProdutos"):
-        os.makedirs("csvProdutos")
-    json_file = open(FILENAME,
-                     'w')
-    json.dump(data, json_file)
+    requests.post("http://localhost:8080/api/v1/pingodoce/products", json=data)
+
+    # if not os.path.exists("csvProdutos"):
+    #    os.makedirs("csvProdutos")
+    # json_file = open(FILENAME,
+    #                 'w')
+    #json.dump(data, json_file)
     # print(f'getted {len(produtos)} products')
 
     # with open('pingo-doce-products.json', 'w') as f:
     #     print('saving...')
     #     for id in produtos.keys():
     #         f.write(f'{str(produtos[id])}\n')
+
 
 def main():
     getProdutosPagina()
@@ -119,4 +125,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

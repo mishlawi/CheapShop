@@ -105,10 +105,12 @@ def getInfoProdutos():
     #     for elem in products:
     #         csvwriter.writerow(elem)
 
-    if not os.path.exists("csvProdutos"):
-        os.makedirs("csvProdutos")
-    json_file = open(FILENAME, 'w', encoding='utf-8')
-    json.dump(data, json_file, ensure_ascii=False)
+    requests.post("http://localhost:8080/api/v1/auchan/products",data)
+
+    #if not os.path.exists("csvProdutos"):
+    #    os.makedirs("csvProdutos")
+    #json_file = open(FILENAME, 'w', encoding='utf-8')
+    #json.dump(data, json_file, ensure_ascii=False)
 
 
 # getProductInfo('https://www.auchan.pt/pt/beleza-e-higiene/maquilhagem-e-perfumes/perfumes-senhora/conjunto-sense-collection-calendario-advento-magical/3519949.html')
