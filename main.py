@@ -7,14 +7,11 @@ import Scraping.pingodoce
 
 def runscrapers():
     print("starting scrapers...")
-    auchanfilename = Scraping.auchan.main()
-    pingofilename = Scraping.pingodoce.main()
-    #auchanfilename = 'csvProdutos/ProdutosAuchan.json'
-    #pingofilename = 'csvProdutos/ProdutosPingoDoce.json'
+    #Scraping.auchan.main()
+    #Scraping.pingodoce.main()
 
     print("uploading json files to db...")
-    subprocess.run(['node', 'Database/uploadJSON.js',
-                    auchanfilename, pingofilename])
+    subprocess.run(['node', 'Database/uploadJSON.js'])
 
 
 def main():
