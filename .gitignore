@@ -1,6 +1,5 @@
-Scraping/csvProdutos/*
-ChipShopDontStop/src/__pycache__/
+**/csvProdutos/*
 .vscode/
 **/.DS_Store
-*.json
 node_modules/
+package-lock.json
