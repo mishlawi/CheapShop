@@ -38,14 +38,14 @@ for (i = 0; i < jsonData.length; i++) {
       PrecoPrim = jsonData[i]["Preço Primário"],
       PrecoUni = jsonData[i]["Preço Por Unidade"],
       Promo = jsonData[i]["Promo"],
-      EAN = jsonData[i]["EAN"],
-      IDitem = k + i
+      EAN = jsonData[i]["EAN"]
+      //IDitem = k + i
 
   let Superficie = SUP
   var insertStatement = 
-  `INSERT INTO cheapshop.item (Nome, IDitem, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, superficie_IDsup) 
-  values(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  var items = [Nome, IDitem, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, Superficie];
+  `INSERT INTO cheapshop.item (Nome, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, superficie_IDsup) 
+  values(?, ?, ?, ?, ?, ?, ?, ?)`;
+  var items = [Nome, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, Superficie];
 
   // Insert data into database
   con.query(insertStatement, items, 
