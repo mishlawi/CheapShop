@@ -7,10 +7,11 @@ import Scraping.pingodoce
 
 def runscrapers():
     print("starting scrapers...")
-    #Scraping.auchan.main()
-    #Scraping.pingodoce.main()
+    Scraping.auchan.main()
+    Scraping.pingodoce.main()
 
     print("uploading json files to db...")
+    subprocess.run(['npm', 'i', 'mysql2'])
     subprocess.run(['node', 'Database/uploadJSON.js'])
 
 
