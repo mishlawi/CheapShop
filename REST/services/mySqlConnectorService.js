@@ -99,14 +99,12 @@ function pushData(jsonData, Superficie) {
       PrecoPrim = jsonData[i]["Preço Primário"],
       PrecoUni = jsonData[i]["Preço Por Unidade"],
       Promo = jsonData[i]["Promo"],
-      EAN = jsonData[i]["EAN"],
-      IDitem = Superficie + i;
+      EAN = jsonData[i]["EAN"];
 
-    var insertStatement = `INSERT INTO cheapshop.item (Nome, IDitem, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, superficie_IDsup) 
-                values(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE Nome = ?, EAN = ?, Marca = ?, Quantidade = ?, PrecoPrim = ?, PrecoUni = ?, Promo = ?, superficie_IDsup = ?;`;
+    var insertStatement = `INSERT INTO cheapshop.item (Nome, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, superficie_IDsup) 
+                values(?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE Nome = ?, Marca = ?, Quantidade = ?, PrecoPrim = ?, PrecoUni = ?, Promo = ?;`;
     var items = [
       Nome,
-      IDitem,
       EAN,
       Marca,
       Quantidade,
@@ -115,13 +113,11 @@ function pushData(jsonData, Superficie) {
       Promo,
       Superficie,
       Nome,
-      EAN,
       Marca,
       Quantidade,
       PrecoPrim,
       PrecoUni,
       Promo,
-      Superficie,
     ];
 
     // Insert data into database
