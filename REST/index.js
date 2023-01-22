@@ -14,4 +14,4 @@ app.post("/api/v1/pingodoce/products", (req, res) => {
   return res.send("Received a GET HTTP method");
 });
 
-app.listen(8080, () => console.log(`Example app listening on port 8080!`));
+app.listen(8080, () => console.log(`API listening on port 8080!`));

@@ -1,0 +1,3 @@
+# 0 0 * * * python3 /usr/src/scrapers/auchan.py
+# 0 0 * * * python3 /usr/src/scrapers/pingodoce.py
+* * * * * python3 /usr/src/scrapers/pingodoce.py

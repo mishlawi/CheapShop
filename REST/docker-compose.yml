@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  mysql:
+    build:
+      context: .
+      dockerfile: db_deployment/Dockerfile
+    environment:
+      MYSQL_DATABASE: ${DBNAME}
+      MYSQL_ROOT_PASSWORD: ${PASSWORD}
+    ports:
+      - "${PORT}:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+  api:
+    build:
+      context: .
+      dockerfile: api_deployment/Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DBNAME: ${DBNAME}
+      USERNAME: ${USERNAME}
+      PASSWORD: ${PASSWORD}
+      PORT: 3306
+      HOST: ${HOST}
+  scraper:
+    build:
+      context: .
+      dockerfile: scrapers_deployment/Dockerfile
+    depends_on:
+      - api
+volumes:
+  my-db:
