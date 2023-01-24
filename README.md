@@ -1,7 +1,9 @@
 # CheapShop
 
 In REST folder, run `bash deploy.sh` to deploy a container for mysql, one for the api and one fro the scrapers (auchan and pingo doce).
+
 To connect to mysql database from your machine, use host `localhost`, port `3300`, username `root` and password `root`.
+
 You can connect to the API from your machine using `localhost:8080`.
 
 
