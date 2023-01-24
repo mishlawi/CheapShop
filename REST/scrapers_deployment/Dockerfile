@@ -1,19 +1,20 @@
-FROM python:3
+FROM ubuntu:20.04
 
-RUN apt-get update && apt-get -y install cron
+RUN apt-get update && apt-get -y install cron python3 pip vim
 
-WORKDIR /usr/src/scrapers
+WORKDIR /usr/src/
 
-COPY scrapers_deployment/scrapers/auchan.py scrapers_deployment/scrapers/pingodoce.py scrapers_deployment/scrapers/requirements.txt ./
+COPY src/auchan.py src/pingodoce.py src/requirements.txt ./
 
-COPY scrapers_deployment/crontab /etc/cron.d/crontab
+COPY crontab /etc/cron.d/crontab
+
+RUN touch /usr/src/cron.log
 
 RUN pip3 install -r requirements.txt
 
 # run the crontab file
-RUN chmod 0644 /etc/cron.d/crontab
-RUN /usr/bin/crontab /etc/cron.d/crontab
+RUN chmod 0744 /etc/cron.d/crontab && crontab /etc/cron.d/crontab
 
 # Executing crontab command
-CMD ["cron", "-f"]
-#CMD ["python3","pingodoce.py"]
+CMD cron && tail -f /usr/src/cron.log
+

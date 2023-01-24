@@ -30,8 +30,8 @@ services:
       HOST: ${HOST}
   scraper:
     build:
-      context: .
-      dockerfile: scrapers_deployment/Dockerfile
+      context: scrapers_deployment/
+      dockerfile: Dockerfile
     depends_on:
       - api
 volumes:

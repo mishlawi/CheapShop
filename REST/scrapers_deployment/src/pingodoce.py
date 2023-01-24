@@ -1,16 +1,11 @@
 import requests
 from xml.dom import minidom
 from re import *
-import time
-import csv
-import json
 from unidecode import unidecode
-import os
 
 SITEMAP = 'https://mercadao.pt/api/sitemap.xml'
 APIIDS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/categories/slug/'
 APIPRODUTOS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/products/search?mainCategoriesIds=["@catID@"]&from=@startPoint@&size=100&esPreference=0.6439211110152693'
-FILENAME = 'csvProdutos/ProdutosPingoDoce.json'
 
 
 def regra3simples(preco, quantidade, pretendido=1):
@@ -38,7 +33,6 @@ def getProdutosPagina():
     #     s = requests.Session()
     #     categorias.append((elem[0], s.get(APIIDS+elem[0]).json()['id']))
 
-    # #produtos = {}
     # print('Starting getting products...')
     # for categoria, categoriaId in categorias:
     #     link = sub(r'@catID@', categoriaId, APIPRODUTOS)
@@ -57,8 +51,6 @@ def getProdutosPagina():
     #         for product in page['products']:
     #             product = product['_source']
     #             for ean in product['eans']:
-    #                 # if product['slug'] in produtos.keys():
-    #                 #     continue
     #                 if name := product['firstName']:
     #                     name = unidecode(
     #                         product['firstName'].lower().replace('-', ' '))
@@ -78,22 +70,17 @@ def getProdutosPagina():
     #                 ppu = regra3simples(
     #                     product['buyingPrice'], product['netContent'])
 
-    #                 #rows.add((name, brand, quantity, price, ppu, promo, ean))
     #                 objProduto = {"Nome": name, "Marca": brand, "Quantidade": quantity,
     #                               unidecode("Preço Primário"): price, unidecode("Preço Por Unidade"): ppu, "Promo": promo, "EAN": ean}
     #                 if objProduto in data:
     #                     continue
     #                 data.append(objProduto)
-    #             # produtos[product['slug']] = objProduct
     #         i += 100
     #         thislink = sub(r'@startPoint@', str(i), link)
     #         try:
     #             page = s.get(thislink).json()['sections']['null']
     #         except:
     #             print(f'ERROR::: got {len(data)} products')
-    #             time.sleep(60)
-
-    # csvwriter.writerows(rows)
 
     data = [
         {
@@ -134,24 +121,15 @@ def getProdutosPagina():
         }
     ]
 
-    requests.post("http://api:8080/api/v1/pingodoce/products", json=data)
-
-    # if not os.path.exists("csvProdutos"):
-    #    os.makedirs("csvProdutos")
-    # json_file = open(FILENAME,
-    #                 'w')
-    #json.dump(data, json_file)
-    # print(f'getted {len(produtos)} products')
-
-    # with open('pingo-doce-products.json', 'w') as f:
-    #     print('saving...')
-    #     for id in produtos.keys():
-    #         f.write(f'{str(produtos[id])}\n')
+    print('pingo doing request...')
+    response = requests.post(
+        "http://api:8080/api/v1/pingodoce/products", json=data, timeout=30)
+    print('response status to pingo:')
+    print(response.status_code)
 
 
 def main():
     getProdutosPagina()
-    return FILENAME
 
 
 if __name__ == "__main__":

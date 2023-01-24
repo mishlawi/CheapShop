@@ -2,20 +2,13 @@ from bs4 import BeautifulSoup as BS
 import requests
 import re
 import json
-import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import csv
 from unidecode import unidecode
-import os
 
-products = set()
 data = []
-
-FILENAME = 'csvProdutos/ProdutosAuchan.json'
 
 
 def getProdutos(link):
-    #xml = open("site.xml").read()
     s = requests.Session()
     xml = s.get(link).text
     soup = BS(xml, features='lxml')
@@ -75,7 +68,6 @@ def getProductInfo(link):
                 elif qnt == 'UN':
                     qnt == '1 UN'
 
-        products.add((nome, brand, qnt, preco, ppu, promo, ean))
         objProduto = {"Nome": nome, "Marca": brand, "Quantidade": qnt, unidecode(
             "Preço Primário"): preco, unidecode("Preço Por Unidade"): ppu, "Promo": promo, "EAN": ean}
         if not objProduto in data:
@@ -85,41 +77,61 @@ def getProductInfo(link):
         print(f"\nproduto removido do site, LINK para confirmar -> {link} \n")
 
 
-# https://www.auchan.pt/sitemap_0-product.xml
-# https://www.auchan.pt/sitemap_1-product.xml
-
 def getInfoProdutos():
-    print("Starting..")
-    getProdutos('https://www.auchan.pt/sitemap_0-product.xml')
-    print("Finished first sitemap..")
-    getProdutos('https://www.auchan.pt/sitemap_1-product.xml')
-    print("Finished second sitemap...")
+    # print("Starting..")
+    # getProdutos('https://www.auchan.pt/sitemap_0-product.xml')
+    # print("Finished first sitemap..")
+    # getProdutos('https://www.auchan.pt/sitemap_1-product.xml')
+    # print("Finished second sitemap...")
 
-    #print("Writing in csv")
-    # fields = ['Nome', 'Marca', 'Quantidade',
-    #           'Preço Primário', 'Preço Por Unidade', 'Promo','EAN']
-    # print(products)
-    # with open('products.csv','w') as csvfile :
-    #     csvwriter = csv.writer(csvfile)
-    #     csvwriter.writerow(fields)
-    #     for elem in products:
-    #         csvwriter.writerow(elem)
+    data = [
+        {
+            "Nome": "x storck toffifee 125g",
+            "Marca": "storck",
+            "Quantidade": "0.125 KG",
+            "Preco Primario": "3.85",
+            "Preco Por Unidade": "24 €/Kg",
+            "Promo": "3.00",
+            "EAN": "4014200400007"
+        },
+        {
+            "Nome": "x pescanova pescada do cabo 400g",
+            "Marca": "pescanova",
+            "Quantidade": "0.4 KG",
+            "Preco Primario": "4.99",
+            "Preco Por Unidade": "12.48 €/Kg",
+            "Promo": None,
+            "EAN": "8420063034515"
+        },
+        {
+            "Nome": "x branco faisao 1l",
+            "Marca": "faisao",
+            "Quantidade": None,
+            "Preco Primario": "2.19",
+            "Preco Por Unidade": "2.19 €/Lt",
+            "Promo": None,
+            "EAN": "5621239329747"
+        },
+        {
+            "Nome": "x pescanova pescada no5 para cozer 800g",
+            "Marca": "hey im working",
+            "Quantidade": "0.8 KG",
+            "Preco Primario": "13.99",
+            "Preco Por Unidade": "17.49 €/Kg",
+            "Promo": None,
+            "EAN": "8410963005232"
+        }
+    ]
 
-    requests.post("http://api:8080/api/v1/auchan/products",data)
-
-    #if not os.path.exists("csvProdutos"):
-    #    os.makedirs("csvProdutos")
-    #json_file = open(FILENAME, 'w', encoding='utf-8')
-    #json.dump(data, json_file, ensure_ascii=False)
-
-
-# getProductInfo('https://www.auchan.pt/pt/beleza-e-higiene/maquilhagem-e-perfumes/perfumes-senhora/conjunto-sense-collection-calendario-advento-magical/3519949.html')
-# getProductInfo('https://www.auchan.pt/pt/alimentacao/mercearia/bolachas-e-bolos/bolachas-recheadas-e-waffers/bolacha-bahlsen-waffer-waffeleten-100g/105.html')
+    print('auchan doing request...')
+    response = requests.post("http://api:8080/api/v1/auchan/products",
+                             json=data, timeout=30)
+    print('response status to auchan:')
+    print(response.status_code)
 
 
 def main():
     getInfoProdutos()
-    return FILENAME
 
 
 if __name__ == "__main__":
