@@ -18,7 +18,6 @@
     "http-errors": "~1.6.3",
     "js-crypto-random": "^1.0.4",
     "method-override": "^3.0.0",
-    "mongoose": "^6.8.2",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
     "passport": "^0.6.0",
