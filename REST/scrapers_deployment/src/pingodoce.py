@@ -6,6 +6,8 @@ from unidecode import unidecode
 SITEMAP = 'https://mercadao.pt/api/sitemap.xml'
 APIIDS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/categories/slug/'
 APIPRODUTOS = 'https://mercadao.pt/api/catalogues/6107d28d72939a003ff6bf51/products/search?mainCategoriesIds=["@catID@"]&from=@startPoint@&size=100&esPreference=0.6439211110152693'
+IMAGELINK = 'https://res.cloudinary.com/fonte-online/image/upload/v1/PDO_PROD/'
+PRODUCTLINK = 'https://mercadao.pt/store/pingo-doce/product/'
 
 
 def regra3simples(preco, quantidade, pretendido=1):
@@ -70,8 +72,13 @@ def getProdutosPagina():
     #                 ppu = regra3simples(
     #                     product['buyingPrice'], product['netContent'])
 
+    #                 imagelink = IMAGELINK + \
+    #                     product['sku']+'_'+str(product['imagesNumber'])
+
+    #                 productlink = PRODUCTLINK + product['slug']
+
     #                 objProduto = {"Nome": name, "Marca": brand, "Quantidade": quantity,
-    #                               unidecode("Preço Primário"): price, unidecode("Preço Por Unidade"): ppu, "Promo": promo, "EAN": ean}
+    #                               unidecode("Preço Primário"): price, unidecode("Preço Por Unidade"): ppu, "Promo": promo, "EAN": ean, "Link Imagem": imagelink, "Link Produto": productlink}
     #                 if objProduto in data:
     #                     continue
     #                 data.append(objProduto)
@@ -84,42 +91,41 @@ def getProdutosPagina():
 
     data = [
         {
-            "Nome": "chocolate storck toffifee 125g",
-            "Marca": "storck",
-            "Quantidade": "0.125 KG",
-            "Preco Primario": "3.85",
-            "Preco Por Unidade": "24 €/Kg",
-            "Promo": "3.00",
-            "EAN": "4014400400007"
+            "Nome": "fosforos home 7   pack 4",
+            "Marca": "home 7",
+            "Quantidade": "4x100 un",
+            "Preco Primario": 0.69,
+            "Preco Por Unidade": 0.17,
+            "Promo": None,
+            "EAN": "2000003210862",
+            "Link Imagem": "https://res.cloudinary.com/fonte-online/image/upload/v1/PDO_PROD/862257_1",
+            "Link Produto": "https://mercadao.pt/store/pingo-doce/product/fosforos-home-7-pack-4-4x100-un"
         },
         {
-            "Nome": "filetes pescanova pescada do cabo 400g",
-            "Marca": "pescanova",
-            "Quantidade": "0.4 KG",
-            "Preco Primario": "4.99",
-            "Preco Por Unidade": "12.48 €/Kg",
+            "Nome": "fosforos home 7   pack 4",
+            "Marca": "home 7",
+            "Quantidade": "4x100 un",
+            "Preco Primario": 0.69,
+            "Preco Por Unidade": 0.17,
             "Promo": None,
-            "EAN": "8410063034515"
+            "EAN": "5601009967759",
+            "Link Imagem": "https://res.cloudinary.com/fonte-online/image/upload/v1/PDO_PROD/862257_1",
+            "Link Produto": "https://mercadao.pt/store/pingo-doce/product/fosforos-home-7-pack-4-4x100-un"
         },
         {
-            "Nome": "vinho branco faisao 1l",
-            "Marca": "faisao",
-            "Quantidade": None,
-            "Preco Primario": "2.19",
-            "Preco Por Unidade": "2.19 €/Lt",
+            "Nome": "castanha pingo doce congelada",
+            "Marca": "pingo doce",
+            "Quantidade": "1 kg",
+            "Preco Primario": 9.99,
+            "Preco Por Unidade": 9.99,
             "Promo": None,
-            "EAN": "5601239329747"
-        },
-        {
-            "Nome": "posta pescanova pescada no5 para cozer 800g",
-            "Marca": "hey im working",
-            "Quantidade": "0.8 KG",
-            "Preco Primario": "13.99",
-            "Preco Por Unidade": "17.49 €/Kg",
-            "Promo": None,
-            "EAN": "8410063005232"
+            "EAN": "5601009920594",
+            "Link Imagem": "https://res.cloudinary.com/fonte-online/image/upload/v1/PDO_PROD/614838_1",
+            "Link Produto": "https://mercadao.pt/store/pingo-doce/product/castanha-pingo-doce-congelada-1-kg"
         }
     ]
+    # f = open('pingo.json','w')
+    # f.write(json.dumps(data))
 
     print('pingo doing request...')
     response = requests.post(

@@ -68,8 +68,11 @@ def getProductInfo(link):
                 elif qnt == 'UN':
                     qnt == '1 UN'
 
+        if img := jsonDic["image"]:
+            img = jsonDic["image"][0]
+
         objProduto = {"Nome": nome, "Marca": brand, "Quantidade": qnt, unidecode(
-            "Preço Primário"): preco, unidecode("Preço Por Unidade"): ppu, "Promo": promo, "EAN": ean}
+            "Preço Primário"): preco, unidecode("Preço Por Unidade"): ppu, "Promo": promo, "EAN": ean, "Link Imagem": img, "Link Produto": link}
         if not objProduto in data:
             data.append(objProduto)
 
@@ -86,42 +89,42 @@ def getInfoProdutos():
 
     data = [
         {
-            "Nome": "x storck toffifee 125g",
-            "Marca": "storck",
-            "Quantidade": "0.125 KG",
-            "Preco Primario": "3.85",
-            "Preco Por Unidade": "24 €/Kg",
-            "Promo": "3.00",
-            "EAN": "4014200400007"
+            "Nome": "bolacha bahlsen waffer waffeleten 100g",
+            "Marca": "bahlsen",
+            "Quantidade": "0.1 KG",
+            "Preco Primario": "2.49",
+            "Preco Por Unidade": "24.9 \u20ac/Kg",
+            "Promo": None,
+            "EAN": "4017100219900",
+            "Link Imagem": "https://www.auchan.pt/on/demandware.static/-/Sites-auchan-pt-master-catalog/default/dw0c614f5f/images/hi-res/000000105.jpg",
+            "Link Produto": "https://www.auchan.pt/pt/alimentacao/mercearia/bolachas-e-bolos/bolachas-recheadas-e-waffers/bolacha-bahlsen-waffer-waffeleten-100g/105.html"
         },
         {
-            "Nome": "x pescanova pescada do cabo 400g",
-            "Marca": "pescanova",
+            "Nome": "flocos salutem centeio integral 375g",
+            "Marca": "salutem",
+            "Quantidade": "0.375 KG",
+            "Preco Primario": "1.09",
+            "Preco Por Unidade": "2.91 \u20ac/Kg",
+            "Promo": None,
+            "EAN": "5601557003138",
+            "Link Imagem": "https://www.auchan.pt/on/demandware.static/-/Sites-auchan-pt-master-catalog/default/dw44af3d89/images/hi-res/000001006.jpg",
+            "Link Produto": "https://www.auchan.pt/pt/alimentacao/dietetica/mercearia-dietetica/cereais-flocos-e-granolas/flocos-salutem-centeio-integral-375g/1006.html"
+        },
+        {
+            "Nome": "soja salutem nacos 400g",
+            "Marca": "salutem",
             "Quantidade": "0.4 KG",
-            "Preco Primario": "4.99",
-            "Preco Por Unidade": "12.48 €/Kg",
+            "Preco Primario": "1.89",
+            "Preco Por Unidade": "4.73 \u20ac/Kg",
             "Promo": None,
-            "EAN": "8420063034515"
-        },
-        {
-            "Nome": "x branco faisao 1l",
-            "Marca": "faisao",
-            "Quantidade": None,
-            "Preco Primario": "2.19",
-            "Preco Por Unidade": "2.19 €/Lt",
-            "Promo": None,
-            "EAN": "5621239329747"
-        },
-        {
-            "Nome": "x pescanova pescada no5 para cozer 800g",
-            "Marca": "hey im working",
-            "Quantidade": "0.8 KG",
-            "Preco Primario": "13.99",
-            "Preco Por Unidade": "17.49 €/Kg",
-            "Promo": None,
-            "EAN": "8410963005232"
+            "EAN": "5601557005095",
+            "Link Imagem": "https://www.auchan.pt/on/demandware.static/-/Sites-auchan-pt-master-catalog/default/dw1b5e7a21/images/hi-res/000001043.jpg",
+            "Link Produto": "https://www.auchan.pt/pt/biologicos-e-escolhas-alimentares/alimentacao-vegetariana/soja-salutem-nacos-400g/1043.html"
         }
     ]
+
+    # f = open('auchan.json', 'w')
+    # f.write(json.dumps(data))
 
     print('auchan doing request...')
     response = requests.post("http://api:8080/api/v1/auchan/products",

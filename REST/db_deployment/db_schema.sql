@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS `cheapshop`.`item` (
   `PrecoPrim` VARCHAR(45) NULL DEFAULT NULL,
   `PrecoUni` VARCHAR(45) NULL DEFAULT NULL,
   `Promo` VARCHAR(45) CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_0900_ai_ci' NULL DEFAULT NULL,
+  `LinkImagem` VARCHAR(300) NULL DEFAULT NULL,
+  `LinkProduto` VARCHAR(300) NULL DEFAULT NULL,
   `superficie_IDsup` VARCHAR(5) NOT NULL,
   PRIMARY KEY (`EAN`, `superficie_IDsup`),
   INDEX `fk_item_superficie1_idx` (`superficie_IDsup` ASC) VISIBLE,

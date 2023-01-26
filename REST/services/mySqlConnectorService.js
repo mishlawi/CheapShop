@@ -19,13 +19,15 @@ module.exports.pushData = (jsonData, Superficie) => {
     var Nome = jsonData[i]["Nome"],
       Marca = jsonData[i]["Marca"],
       Quantidade = jsonData[i]["Quantidade"],
-      PrecoPrim = jsonData[i]["Preço Primário"],
-      PrecoUni = jsonData[i]["Preço Por Unidade"],
+      PrecoPrim = jsonData[i]["Preco Primario"],
+      PrecoUni = jsonData[i]["Preco Por Unidade"],
       Promo = jsonData[i]["Promo"],
-      EAN = jsonData[i]["EAN"];
+      EAN = jsonData[i]["EAN"],
+      LinkImagem = jsonData[i]["Link Imagem"],
+      LinkProduto = jsonData[i]["Link Produto"];
 
-    var insertStatement = `INSERT INTO cheapshop.item (Nome, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, superficie_IDsup) 
-                values(?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE Nome = ?, Marca = ?, Quantidade = ?, PrecoPrim = ?, PrecoUni = ?, Promo = ?;`;
+    var insertStatement = `INSERT INTO cheapshop.item (Nome, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, LinkImagem, LinkProduto, superficie_IDsup) 
+                values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE Nome = ?, Marca = ?, Quantidade = ?, PrecoPrim = ?, PrecoUni = ?, Promo = ?, LinkImagem = ?, LinkProduto = ?;`;
     var items = [
       Nome,
       EAN,
@@ -34,6 +36,8 @@ module.exports.pushData = (jsonData, Superficie) => {
       PrecoPrim,
       PrecoUni,
       Promo,
+      LinkImagem,
+      LinkProduto,
       Superficie,
       Nome,
       Marca,
@@ -41,6 +45,8 @@ module.exports.pushData = (jsonData, Superficie) => {
       PrecoPrim,
       PrecoUni,
       Promo,
+      LinkImagem,
+      LinkProduto,
     ];
 
     // Insert data into database
