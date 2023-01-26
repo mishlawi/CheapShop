@@ -12,7 +12,7 @@ let con = mysql.createConnection({
   database: process.env.DBNAME,
 });
 
-function pushData(jsonData, Superficie) {
+module.exports.pushData = (jsonData, Superficie) => {
   console.log("Starting data push..");
   for (i = 0; i < jsonData.length; i++) {
     // Extract data from each object in the array
@@ -54,4 +54,35 @@ function pushData(jsonData, Superficie) {
   console.log("Data push complete!");
 }
 
-module.exports = { pushData };
+module.exports.getAllProducts = () => {
+  query = "SELECT * FROM cheapshop.item"
+  con.query(query, (err, results, fields) => {
+    if (err) return console.log(err);
+    return results;
+  });
+}
+
+module.exports.getProductsCheaper = () => {
+  query = "SELECT * FROM cheapshop.item"
+  con.query(query, (err, results, fields) => {
+    if (err) return console.log(err);
+    return results;
+  });
+}
+
+module.exports.getAllProductsBySuper = (id) => {
+  query = `SELECT * FROM cheapshop.item WHERE superficie_IDsup = ${id}`
+  con.query(query, (err, results, fields) => {
+    if (err) return console.log(err);
+    return results;
+  });
+}
+
+module.exports.getAllProductsByEAN = (ean) => {
+  query = `SELECT * FROM cheapshop.item WHERE EAN = ${ean}`
+  con.query(query, (err, results, fields) => {
+    if (err) return console.log(err);
+    return results;
+  });
+}
+
