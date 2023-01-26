@@ -34,19 +34,19 @@
           <div class="collapse navbar-collapse" id="nav-principal">
             <ul class="navbar-nav ml-auto">
               <li class="nav-item">
-                <a href="index.html" class="nav-link">Home</a>
+                <a href="#" class="nav-link">Home</a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">Shopping List</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">Products</a>
+                <a href="#" class="nav-link">Benefits</a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link">Prices</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="btn btn-outline-light ml-4">Login</a>
+                <a href="login.html" class="btn btn-outline-light ml-4">Login</a>
               </li>
             </ul>
           </div>
@@ -55,66 +55,49 @@
       </nav>
     </header><!-- fim cabecalho -->
 
-    <section class="vh-100 bg-warning">
-      <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col col-xl-10">
-            <div class="card" style="border-radius: 1rem;">
-              <div class="row g-0">
-                <div class="col-md-6 col-lg-5 d-none d-md-block">
-                  <img src="img/login.jpg"
-                    alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 0;" />
-                </div>
-                <div class="col-md-6 col-lg-7 d-flex align-items-center">
-                  <div class="card-body p-4 p-lg-5 text-black">
-    
-                    <form>
-    
-                      <div class="d-flex align-items-center mb-3 pb-1">
-                        <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
-                        <span class="h1 fw-bold mb-0">Logo</span>
+    <div class="container">
+      <div class="row">
+          <% for(var i=(pagina-1)*30; i<produtos.length && i<pagina*30; i++) { %>
+              <div class="col-sm-4">
+                  <div class="card">
+                      <img src="<%= produtos[i].imagem %>" class="card-img-top">
+                      <div class="card-body">
+                          <h5 class="card-title"><%= produtos[i].nome %></h5>
+                          <p class="card-text">Preço: <%= produtos[i].preco %> €</p>
+                          <p class="card-text">Supermercado: <%= produtos[i].supermercado %></p>
                       </div>
-    
-                      <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
-    
-                      <div class="form-outline mb-4">
-                        <input type="email" id="form2Example17" class="form-control form-control-lg" />
-                        <label class="form-label" for="form2Example17">Email address</label>
-                      </div>
-    
-                      <div class="form-outline mb-4">
-                        <input type="password" id="form2Example27" class="form-control form-control-lg" />
-                        <label class="form-label" for="form2Example27">Password</label>
-                      </div>
-    
-                      <div class="pt-1 mb-4">
-                        <button class="btn btn-dark btn-lg btn-block" type="button">Login</button>
-                      </div>
-    
-                      <a class="small text-muted" href="#!">Forgot password?</a>
-                      <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="register.html"
-                          style="color: #393f81;">Register here</a></p>
-                      <a href="#!" class="small text-muted">Terms of use.</a>
-                      <a href="#!" class="small text-muted">Privacy policy</a>
-                    </form>
-    
                   </div>
-                </div>
               </div>
-            </div>
-          </div>
-        </div>
+          <% } %>
       </div>
-    </section>
+    </div>
+  
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item <%= pagina === 1 ? 'disabled' : '' %>">
+                <a class="page-link" href="?pagina=<%= pagina-1 %>">Anterior</a>
+            </li>
+            <% for(var i=1; i<=Math.ceil(produtos.length/30); i++) { %>
+                <li class="page-item <%= i === pagina ? 'active' : '' %>">
+                    <a class="page-link" href="?pagina=<%= i %>"><%= i %></a>
+                </li>
+            <% } %>
+            <li class="page-item <%= pagina === Math.ceil(produtos.length/30) ? 'disabled' : '' %>">
+                <a class="page-link" href="?pagina=<%= pagina+1 %>">Próximo</a>
+            </li>
+        </ul>
+    </nav>
+  
+    
 
     <footer class="mt-4 mb-4">
       <div class="container">
         <div class="row">
           <div class="col-md-8">
             <p>
-              <a href="home.html">Home</a>
+              <a href="">Home</a>
               <a href="">Shopping List</a>
-              <a href="">Products</a>
+              <a href="">Benefits</a>
               <a href="">Prices</a>
             </p>
           </div>
