@@ -88,9 +88,13 @@ router.get("/produto/:ean", checkAuthenticated, async (req, res) => {
 
 // COMO VERIFICAR A LISTA DE COMPRAS QUE QUERO??
 router.get("/listaCompras", checkAuthenticated, async (req, res) => {
-  return await axios("http://api:8080/api/listaCompras")
+  return await axios("http://api:8080/api/listaCompras/" + req.user.email)
     .then(resp => res.render("shoplist", {"listaCompras" : resp}))
     .catch( e => console.log(e))
+})
+
+router.post("/listaCompras", checkAuthenticated, async (req, res) => {
+  
 })
 
 // TODO - ADICIONAR PRODUTO À LISTA DE COMPRAS
