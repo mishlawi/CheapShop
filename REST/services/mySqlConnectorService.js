@@ -69,7 +69,7 @@ module.exports.getAllProducts = () => {
 }
 
 module.exports.getProductsCheaper = () => {
-  query = "SELECT * FROM cheapshop.item"
+  query = "SELECT DISTINCT item.EAN, MIN(item.PrecoUni) FROM item GROUP BY item.EAN"
   con.query(query, (err, results, fields) => {
     if (err) return console.log(err);
     return results;
@@ -85,10 +85,18 @@ module.exports.getAllProductsBySuper = (id) => {
 }
 
 module.exports.getAllProductsByEAN = (ean) => {
-  query = `SELECT * FROM cheapshop.item WHERE EAN = ${ean}`
+  query = `SELECT * FROM cheapshop.item WHERE ean = ${ean}`
   con.query(query, (err, results, fields) => {
     if (err) return console.log(err);
     return results;
   });
 }
 
+
+module.exports.getShopList = (userId) => {
+  query = `SELECT * FROM cheapshop.lista ` //TODO
+  con.query(query, (err, results, fields) => {
+    if (err) return console.log(err);
+    return results;
+  });
+}
