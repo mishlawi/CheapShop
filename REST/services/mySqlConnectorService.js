@@ -69,7 +69,7 @@ module.exports.getAllProducts = () => {
 }
 
 module.exports.getProductsCheaper = () => {
-  query = "SELECT * FROM cheapshop.item"
+  query = "SELECT DISTINCT item.EAN, MIN(item.PrecoUni) FROM item GROUP BY item.EAN"
   con.query(query, (err, results, fields) => {
     if (err) return console.log(err);
     return results;
@@ -85,10 +85,55 @@ module.exports.getAllProductsBySuper = (id) => {
 }
 
 module.exports.getAllProductsByEAN = (ean) => {
-  query = `SELECT * FROM cheapshop.item WHERE EAN = ${ean}`
+  query = `SELECT * FROM cheapshop.item WHERE ean = ${ean}`
   con.query(query, (err, results, fields) => {
     if (err) return console.log(err);
     return results;
   });
 }
 
+
+module.exports.getShopList = (userId) => {
+  query = `SELECT * FROM cheapshop.lista WHERE user_EmailUser == ${userID}`
+  con.query(query, (err, results, fields) => {
+    if (err) return console.log(err);
+    return results;
+  });
+}
+/*
+module.exports.addProdToShopCart = (qtd, userId, ean, sup) => {
+  console.log("Starting data push..");
+
+    var insertStatement = `INSERT INTO cheapshop.lista (Quantidade, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, LinkImagem, LinkProduto, superficie_IDsup) 
+                values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE Nome = ?, Marca = ?, Quantidade = ?, PrecoPrim = ?, PrecoUni = ?, Promo = ?, LinkImagem = ?, LinkProduto = ?;`;
+    var items = [
+      Nome,
+      EAN,
+      Marca,
+      Quantidade,
+      PrecoPrim,
+      PrecoUni,
+      Promo,
+      LinkImagem,
+      LinkProduto,
+      Superficie,
+      Nome,
+      Marca,
+      Quantidade,
+      PrecoPrim,
+      PrecoUni,
+      Promo,
+      LinkImagem,
+      LinkProduto,
+    ];
+
+    // Insert data into database
+    con.query(insertStatement, items, (err, results, fields) => {
+      if (err) {
+        console.log("Unable to insert item at row ", i + 1);
+        return console.log(err);
+      }
+    });
+  }
+  console.log("Data push complete!");
+}*/

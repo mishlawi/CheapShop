@@ -81,47 +81,47 @@ def getProductInfo(link):
 
 
 def getInfoProdutos():
-    # print("Starting..")
-    # getProdutos('https://www.auchan.pt/sitemap_0-product.xml')
-    # print("Finished first sitemap..")
-    # getProdutos('https://www.auchan.pt/sitemap_1-product.xml')
-    # print("Finished second sitemap...")
+    print("Starting..")
+    getProdutos('https://www.auchan.pt/sitemap_0-product.xml')
+    print("Finished first sitemap..")
+    getProdutos('https://www.auchan.pt/sitemap_1-product.xml')
+    print("Finished second sitemap...")
 
-    data = [
-        {
-            "Nome": "bolacha bahlsen waffer waffeleten 100g",
-            "Marca": "bahlsen",
-            "Quantidade": "0.1 KG",
-            "Preco Primario": "2.49",
-            "Preco Por Unidade": "24.9 \u20ac/Kg",
-            "Promo": None,
-            "EAN": "4017100219900",
-            "Link Imagem": "https://www.auchan.pt/on/demandware.static/-/Sites-auchan-pt-master-catalog/default/dw0c614f5f/images/hi-res/000000105.jpg",
-            "Link Produto": "https://www.auchan.pt/pt/alimentacao/mercearia/bolachas-e-bolos/bolachas-recheadas-e-waffers/bolacha-bahlsen-waffer-waffeleten-100g/105.html"
-        },
-        {
-            "Nome": "flocos salutem centeio integral 375g",
-            "Marca": "salutem",
-            "Quantidade": "0.375 KG",
-            "Preco Primario": "1.09",
-            "Preco Por Unidade": "2.91 \u20ac/Kg",
-            "Promo": None,
-            "EAN": "5601557003138",
-            "Link Imagem": "https://www.auchan.pt/on/demandware.static/-/Sites-auchan-pt-master-catalog/default/dw44af3d89/images/hi-res/000001006.jpg",
-            "Link Produto": "https://www.auchan.pt/pt/alimentacao/dietetica/mercearia-dietetica/cereais-flocos-e-granolas/flocos-salutem-centeio-integral-375g/1006.html"
-        },
-        {
-            "Nome": "soja salutem nacos 400g",
-            "Marca": "salutem",
-            "Quantidade": "0.4 KG",
-            "Preco Primario": "1.89",
-            "Preco Por Unidade": "4.73 \u20ac/Kg",
-            "Promo": None,
-            "EAN": "5601557005095",
-            "Link Imagem": "https://www.auchan.pt/on/demandware.static/-/Sites-auchan-pt-master-catalog/default/dw1b5e7a21/images/hi-res/000001043.jpg",
-            "Link Produto": "https://www.auchan.pt/pt/biologicos-e-escolhas-alimentares/alimentacao-vegetariana/soja-salutem-nacos-400g/1043.html"
-        }
-    ]
+    # data = [
+    #     {
+    #         "Nome": "bolacha bahlsen waffer waffeleten 100g",
+    #         "Marca": "bahlsen",
+    #         "Quantidade": "0.1 KG",
+    #         "Preco Primario": "2.49",
+    #         "Preco Por Unidade": "24.9 \u20ac/Kg",
+    #         "Promo": None,
+    #         "EAN": "4017100219900",
+    #         "Link Imagem": "https://www.auchan.pt/on/demandware.static/-/Sites-auchan-pt-master-catalog/default/dw0c614f5f/images/hi-res/000000105.jpg",
+    #         "Link Produto": "https://www.auchan.pt/pt/alimentacao/mercearia/bolachas-e-bolos/bolachas-recheadas-e-waffers/bolacha-bahlsen-waffer-waffeleten-100g/105.html"
+    #     },
+    #     {
+    #         "Nome": "flocos salutem centeio integral 375g",
+    #         "Marca": "salutem",
+    #         "Quantidade": "0.375 KG",
+    #         "Preco Primario": "1.09",
+    #         "Preco Por Unidade": "2.91 \u20ac/Kg",
+    #         "Promo": None,
+    #         "EAN": "5601557003138",
+    #         "Link Imagem": "https://www.auchan.pt/on/demandware.static/-/Sites-auchan-pt-master-catalog/default/dw44af3d89/images/hi-res/000001006.jpg",
+    #         "Link Produto": "https://www.auchan.pt/pt/alimentacao/dietetica/mercearia-dietetica/cereais-flocos-e-granolas/flocos-salutem-centeio-integral-375g/1006.html"
+    #     },
+    #     {
+    #         "Nome": "soja salutem nacos 400g",
+    #         "Marca": "salutem",
+    #         "Quantidade": "0.4 KG",
+    #         "Preco Primario": "1.89",
+    #         "Preco Por Unidade": "4.73 \u20ac/Kg",
+    #         "Promo": None,
+    #         "EAN": "5601557005095",
+    #         "Link Imagem": "https://www.auchan.pt/on/demandware.static/-/Sites-auchan-pt-master-catalog/default/dw1b5e7a21/images/hi-res/000001043.jpg",
+    #         "Link Produto": "https://www.auchan.pt/pt/biologicos-e-escolhas-alimentares/alimentacao-vegetariana/soja-salutem-nacos-400g/1043.html"
+    #     }
+    # ]
 
     # f = open('auchan.json', 'w')
     # f.write(json.dumps(data))
