@@ -109,3 +109,11 @@ DEFAULT CHARACTER SET = utf8mb3;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO cheapshop.superficie (Nome, IDsup, Website) values('Froiz', 'FRO', 'https://www.froiz.pt');
+INSERT INTO cheapshop.superficie (Nome, IDsup, Website) values('Auchan', 'AUC', 'https://www.auchan.pt');
+INSERT INTO cheapshop.superficie (Nome, IDsup, Website) values('InterMarche', 'INM', 'https://www.intermarche.pt');
+INSERT INTO cheapshop.superficie (Nome, IDsup, Website) values('Continente', 'CON', 'https://www.continente.pt');
+INSERT INTO cheapshop.superficie (Nome, IDsup, Website) values('Pingo Doce', 'PDC', 'https://www.pingodoce.pt');
+INSERT INTO cheapshop.superficie (Nome, IDsup, Website) values('ElCorte Ingles', 'ECI', 'https://www.elcorteingles.pt');
+INSERT INTO cheapshop.superficie (Nome, IDsup, Website) values('Eleclerc', 'ELE', 'https://e-leclerc.pt');
