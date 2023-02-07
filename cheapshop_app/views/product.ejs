@@ -59,11 +59,14 @@
     </header><!-- fim cabecalho -->
 
     <div class="container">
-        <div class="row">
+        <div class="row d-flex justify-content-center mt-3">
             <div class="col-12">
-                <div class="card">
-                    <img src="<%= produto[0].LinkImagem %>" class="card-img-top">
-                    <div class="card-body">
+                <div class="card d-flex flex-row">
+                  <div>
+                    <img src="<%= produto[0].LinkImagem %>" class="card-img-top p-4" style="height: 30rem;">
+                  </div>
+                    <div class="card-body d-flex align-items-center">
+                      <div>
                         <h5 class="card-title"><%= produto[0].Nome %></h5>
                         <p class="card-text">Marca: <%= produto[0].Marca %></p>
                         <p class="card-text">Quantidade: <%= produto[0].Quantidade %></p>
@@ -87,8 +90,9 @@
                                 <% } %>
                             </tbody>
                         </table>
-                        <button class="btn btn-primary" id="add-to-cart-button">Adicionar à lista de compras</button>
-                    </div>
+                        <button class="btn btn-primary btn-block" id="add-to-cart-button">Adicionar à lista de compras</button>
+                      </div>
+                      </div>
                 </div>
             </div>
         </div>

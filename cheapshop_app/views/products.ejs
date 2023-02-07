@@ -58,14 +58,54 @@
       </nav>
     </header><!-- fim cabecalho -->
 
-    
+    <div class="d-flex justify-content-center">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination d-flex justify-content-center mt-3">
+            <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
+                <a class="page-link" href="/produtos?offset=<%= (page-2)*30 %>">Anterior</a>
+            </li>
+            <% if (Math.ceil(total/30)<=5) { %>
+              <% for (var i = 1; i <= Math.ceil(total/30); i++) { %>
+                <li class="page-item <%= i === page ? 'active' : '' %>">
+                    <a class="page-link" href="/produtos?offset=<%= (i-1)*30 %>"><%= i %></a>
+                </li>
+              <% } %>
+            <% } else { %>
+              <% if (page - 2 > 0 && page + 2 < Math.ceil(total/30)) { %>
+                <% for (var i = page - 2; i <= page + 2; i++) { %>
+                  <li class="page-item <%= i === page ? 'active' : '' %>">
+                      <a class="page-link" href="/produtos?offset=<%= (i-1)*30 %>"><%= i %></a>
+                  </li>
+                <% } %>
+              <% } %>
+              <% if (page + 2 > Math.ceil(total/30)) { %> 
+                <% for (var i = page - 2; i <= Math.ceil(total/30); i++) { %>
+                  <li class="page-item <%= i === page ? 'active' : '' %>">
+                      <a class="page-link" href="/produtos?offset=<%= (i-1)*30 %>"><%= i %></a>
+                  </li>
+                <% } %>
+              <% } %> 
+              <% if (page - 2 <= 0) { %> 
+                <% for (var i = 1; i <= 5; i++) { %>
+                  <li class="page-item <%= i === page ? 'active' : '' %>">
+                      <a class="page-link" href="/produtos?offset=<%= (i-1)*30 %>"><%= i %></a>
+                  </li>
+                <% } %>
+              <% } %> 
+            <% } %>
+            <li class="page-item <%= page === Math.ceil(total/30) ? 'disabled' : '' %>">
+                <a class="page-link" href="/produtos?offset=<%= (page)*30 %>">Próximo</a>
+            </li>
+        </ul>
+     </nav>
+    </div>
 
     <div class="container">
       <div class="row">
           <% for(var i=0; i<products.length; i++) { %>
-              <div class="col-md-4 my-3">
-                  <div class="card">
-                      <a href="<%= products[i].LinkImagem %>"><img src="<%= products[i].LinkImagem %>" class="card-img-top"></a>
+              <div class="col-md-3 my-3">
+                  <div class="card" style="height:23rem">
+                      <a href="<%= products[i].LinkImagem %>"><img src="<%= products[i].LinkImagem %>" class="card-img-top p-4"></a>
                       <div class="card-body">
                           <a href="/produtos/<%=products[i].EAN%>""><h5 class="card-title"><%= products[i].Nome %></h5></a>
                           <% if(products[i].Promo != null) { %> 
@@ -83,7 +123,7 @@
   
     <div class="d-flex justify-content-center">
       <nav aria-label="Page navigation example">
-        <ul class="pagination">
+        <ul class="pagination d-flex justify-content-center mt-3">
             <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
                 <a class="page-link" href="/produtos?offset=<%= (page-2)*30 %>">Anterior</a>
             </li>
@@ -95,14 +135,14 @@
               <% } %>
             <% } else { %>
               <% if (page - 2 > 0 && page + 2 < Math.ceil(total/30)) { %>
-                <% for (var i = page - 2; i < page + 2; i++) { %>
+                <% for (var i = page - 2; i <= page + 2; i++) { %>
                   <li class="page-item <%= i === page ? 'active' : '' %>">
                       <a class="page-link" href="/produtos?offset=<%= (i-1)*30 %>"><%= i %></a>
                   </li>
                 <% } %>
               <% } %>
               <% if (page + 2 > Math.ceil(total/30)) { %> 
-                <% for (var i = page - 2; i < Math.ceil(total/30); i++) { %>
+                <% for (var i = page - 2; i <= Math.ceil(total/30); i++) { %>
                   <li class="page-item <%= i === page ? 'active' : '' %>">
                       <a class="page-link" href="/produtos?offset=<%= (i-1)*30 %>"><%= i %></a>
                   </li>
