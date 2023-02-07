@@ -12,19 +12,19 @@
     <script src="https://kit.fontawesome.com/a8b486fd44.js" crossorigin="anonymous"></script>
 
     <!-- Estilo customizado -->
-    <link rel="stylesheet" type="text/css" href="css/estilo.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/estilo.css" />
 
     <title>CheapShop</title>
   </head>
   <body>
 
     <header><!-- Inicio cabecalho -->
-      <nav class="navbar navbar-expand-sm navbar-light bg-warning">
+      <nav class="navbar navbar-expand-sm navbar-light bg-warning" style="padding-bottom: 0px; padding-top: 0px;">
 
         <div class="container">
           
-          <a href="index.html" class="navbar-brand">
-            <img src="img/logo.png" width="142">
+          <a href="#" class="navbar-brand">
+            <img src="/images/logo.png" width="170">
           </a>
 
           <button class="navbar-toggler" data-toggle="collapse" data-target="#nav-principal">
@@ -46,7 +46,7 @@
                 <a href="" class="nav-link">Preços</a>
               </li>
               <li class="nav-item">
-                <a href="/login" class="btn btn-outline-light ml-4">Login</a>
+                <a href="/login" class="btn btn-outline-light ml-4">Iniciar sessão</a>
               </li>
             </ul>
           </div>
@@ -56,7 +56,7 @@
     </header><!-- fim cabecalho -->
 
     <section class="h-100 bg-warning">
-        <div class="container py-5 h-100">
+        <div class="container h-100 pt-0">
           <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col">
               <div class="card card-registration my-4">
@@ -64,33 +64,33 @@
                   <div class="col-xl-6 d-none d-xl-block">
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
                       alt="Sample photo" class="img-fluid"
-                      style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+                      style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem; height: 787px;" />
                   </div>
                   <div class="col-xl-6">
                     <form action="/register" method="POST">
                       <div class="card-body p-md-5 text-black">
-                        <h3 class="mb-5 text-uppercase">Registration form</h3>
+                        <h3 class="mb-5 text-uppercase">Formulário de registo</h3>
         
                         <div class="form-outline mb-4">
                             <input type="text" id="name" name="name" class="form-control form-control-lg" required />
-                            <label class="form-label" for="name">Name</label>
+                            <label class="form-label" for="name">Nome</label>
                         </div>
         
                         <div class="form-outline mb-4">
                           <input type="email" id="email" name="email" class="form-control form-control-lg" required 
                             oninvalid="this.setCustomValidity('')"
                             oninput="this.setCustomValidity('')" />
-                          <label class="form-label" for="email">Email</label>
+                          <label class="form-label" for="email">E-mail</label>
                         </div>
 
                         <div class="form-outline mb-4">
                           <input type="password" id="password" name="password" class="form-control form-control-lg" required />
-                          <label class="form-label" for="password">Password</label>
+                          <label class="form-label" for="password">Palavra-passe</label>
                         </div>
         
                         <div class="form-outline mb-4">
                           <input type="address" id="address" name="address" class="form-control form-control-lg" />
-                          <label class="form-label" for="address">Address</label>
+                          <label class="form-label" for="address">Morada</label>
                         </div>
 
                         <% if(message.length > 0) { %>
@@ -100,9 +100,16 @@
                         <% } %>
 
                         <div class="d-flex justify-content-end pt-3">
-                          <button type="button" class="btn btn-light btn-lg">Reset all</button>
-                          <button type="submit" class="btn btn-warning btn-lg ms-2">Register</button>
+                          <button type="button" class="btn btn-light btn-lg">Limpar</button>
+                          <button type="submit" class="btn btn-warning btn-lg ms-2">Regista-te</button>
                         </div>
+
+                        <p class="mb-5 pb-lg-2" style="color: #393f81">
+                          Tens uma conta?
+                          <a href="/login" style="color: #393f81"
+                            >Inicia sessão</a
+                          >
+                        </p>
                     </form>
       
                     </div>
@@ -114,7 +121,7 @@
         </div>
       </section>
 
-    <footer class="mt-4 mb-4">
+    <!--<footer class="mt-4 mb-4">
       <div class="container">
         <div class="row">
           <div class="col-md-8">
@@ -125,8 +132,8 @@
               <a href="">Preços</a>
             </p>
           </div>
-          <!--redes sociais-->
-          <!--<div class="col-md-4 d-flex justify-content-end">
+          redes sociais
+          <div class="col-md-4 d-flex justify-content-end">
             <a href="#" class="btn btn-outline-dark ml-2">
               <i class="fab fa-facebook"></i>
             </a>
@@ -139,10 +146,10 @@
             <a href="#" class="btn btn-outline-dark ml-2">
               <i class="fab fa-youtube"></i>
             </a>
-          </div>-->
+          </div>
         </div>
       </div>
-    </footer>
+    </footer>-->
 
     
 

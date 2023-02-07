@@ -13,7 +13,7 @@ router.post(
   "/",
   checkNotAuthenticated,
   passport.authenticate("local", {
-    successRedirect: "/produtos",
+    successRedirect: "/",
     failureRedirect: "/login",
     failureFlash: true,
   })

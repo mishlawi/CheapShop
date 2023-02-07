@@ -23,7 +23,7 @@
     ></script>
 
     <!-- Estilo customizado -->
-    <link rel="stylesheet" type="text/css" href="estilo.css" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/estilo.css" />
 
     <title>CheapShop</title>
   </head>
@@ -32,8 +32,8 @@
       <!-- Inicio cabecalho -->
       <nav class="navbar navbar-expand-sm navbar-light bg-warning">
         <div class="container">
-          <a href="index.html" class="navbar-brand">
-            <img src="images/logo.png" width="142" />
+          <a href="#" class="navbar-brand">
+            <img src="/images/logo.png" width="170"/>
           </a>
 
           <button
@@ -59,7 +59,7 @@
                 <a href="" class="nav-link">Preços</a>
               </li>
               <li class="nav-item">
-                <a href="/login" class="btn btn-outline-light ml-4">Login</a>
+                <a href="/login" class="btn btn-outline-light ml-4">Iniciar sessão</a>
               </li>
             </ul>
           </div>
@@ -76,7 +76,7 @@
               <div class="row g-0">
                 <div class="col-md-6 col-lg-5 d-none d-md-block">
                   <img
-                    src="images/login.jpg"
+                    src="/images/login.jpg"
                     alt="login form"
                     class="img-fluid"
                     style="border-radius: 1rem 0 0 0"
@@ -87,20 +87,15 @@
                     <% if (messages.error) { %> <%= messages.error %> <% } %>
 
                     <form action="/login" method="POST">
-                      <div class="d-flex align-items-center mb-3 pb-1">
-                        <i
-                          class="fas fa-cubes fa-2x me-3"
-                          style="color: #ff6219"
-                        ></i>
-                        <span class="h1 fw-bold mb-0">Logo</span>
-                      </div>
+                      
+                      <span class="h1 fw-bold mb-0"><img src="/images/logo.png" width="300"/></span>
 
-                      <h5
+                      <!--<h5
                         class="fw-normal mb-3 pb-3"
                         style="letter-spacing: 1px"
                       >
-                        Sign into your account
-                      </h5>
+                        Iniciar sessão
+                      </h5>-->
 
                       <div class="form-outline mb-4">
                         <input
@@ -110,7 +105,7 @@
                           class="form-control form-control-lg"
                         />
                         <label class="form-label" for="email"
-                          >Email address</label
+                          >E-mail</label
                         >
                       </div>
 
@@ -122,7 +117,7 @@
                           class="form-control form-control-lg"
                         />
                         <label class="form-label" for="password"
-                          >Password</label
+                          >Palavra-passe</label
                         >
                       </div>
 
@@ -131,16 +126,16 @@
                           class="btn btn-dark btn-lg btn-block"
                           type="submit"
                         >
-                          Login
+                          Iniciar sessão
                         </button>
                       </div>
 
                       <!--<a class="small text-muted" href="#!">Forgot password?</a>-->
                       <!--TODO-->
                       <p class="mb-5 pb-lg-2" style="color: #393f81">
-                        Don't have an account?
+                        Não tens uma conta?
                         <a href="/register" style="color: #393f81"
-                          >Register here</a
+                          >Regista-te</a
                         >
                       </p>
                       <!--<a href="#!" class="small text-muted">Terms of use.</a>
@@ -155,7 +150,7 @@
       </div>
     </section>
 
-    <footer class="mt-4 mb-4">
+    <!--<footer class="mt-4 mb-4">
       <div class="container">
         <div class="row">
           <div class="col-md-8">
@@ -166,7 +161,7 @@
               <a href="">Preços</a>
             </p>
           </div>
-          <!--<div class="col-md-4 d-flex justify-content-end">
+          <div class="col-md-4 d-flex justify-content-end">
             <a href="#" class="btn btn-outline-dark ml-2">
               <i class="fab fa-facebook"></i>
             </a>
@@ -179,10 +174,10 @@
             <a href="#" class="btn btn-outline-dark ml-2">
               <i class="fab fa-youtube"></i>
             </a>
-          </div>-->
+          </div>
         </div>
       </div>
-    </footer>
+    </footer>-->
 
     <!-- JavaScript (Opcional) -->
     <!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->

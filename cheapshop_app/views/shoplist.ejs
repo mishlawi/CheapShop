@@ -12,22 +12,25 @@
     <script src="https://kit.fontawesome.com/a8b486fd44.js" crossorigin="anonymous"></script>
 
     <!-- Estilo customizado -->
-    <link rel="stylesheet" type="text/css" href="css/estilo.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/estilo.css" />
 
     <title>CheapShop</title>
   </head>
   <body>
 
-    <header><!-- Inicio cabecalho -->
+    <header>
+      <!-- Inicio cabecalho -->
       <nav class="navbar navbar-expand-sm navbar-light bg-warning">
-
         <div class="container">
-          
           <a href="/" class="navbar-brand">
-            <img src="img/logo.png" width="142">
+            <img src="/images/logo.png" width="170">
           </a>
 
-          <button class="navbar-toggler" data-toggle="collapse" data-target="#nav-principal">
+          <button
+            class="navbar-toggler"
+            data-toggle="collapse"
+            data-target="#nav-principal"
+          >
             <span class="navbar-toggler-icon"></span>
           </button>
 
@@ -47,13 +50,11 @@
               </li>
               <li class="nav-item">
                 <form action="/logout?_method=DELETE" method="POST">
-                  <button type="submit" class="btn btn-outline-light ml-4">Logout</button>
+                  <button type="submit" class="btn btn-outline-light ml-4">Terminar sessão</button>
                 </form>
               </li>
             </ul>
           </div>
-
-        </div>
       </nav>
     </header><!-- fim cabecalho -->
 
