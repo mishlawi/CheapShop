@@ -104,7 +104,7 @@
                   <div class="card">
                       <a href="<%= products[i].LinkImagem %>"><img src="<%= products[i].LinkImagem %>" class="card-img-top"></a>
                       <div class="card-body">
-                          <a href="/produto/<%=products[i].EAN%>""><h5 class="card-title"><%= products[i].Nome %></h5></a>
+                          <a href="/produtos/<%=products[i].EAN%>""><h5 class="card-title"><%= products[i].Nome %></h5></a>
                           <% if(products[i].Promo != null) { %> 
                             <p class="card-text">Preço: <%= products[i].Promo %> €</p>
                           <% }else { %> 
@@ -171,7 +171,7 @@
               <a href="">Preços</a>
             </p>
           </div>
-          <div class="col-md-4 d-flex justify-content-end">
+          <!--<div class="col-md-4 d-flex justify-content-end">
             <a href="#" class="btn btn-outline-dark ml-2">
               <i class="fab fa-facebook"></i>
             </a>
@@ -184,7 +184,7 @@
             <a href="#" class="btn btn-outline-dark ml-2">
               <i class="fab fa-youtube"></i>
             </a>
-          </div>
+          </div>-->
         </div>
       </div>
     </footer>
