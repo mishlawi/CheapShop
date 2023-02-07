@@ -23,7 +23,7 @@
 
         <div class="container">
           
-          <a href="index.html" class="navbar-brand">
+          <a href="/" class="navbar-brand">
             <img src="img/logo.png" width="142">
           </a>
 
@@ -34,19 +34,21 @@
           <div class="collapse navbar-collapse" id="nav-principal">
             <ul class="navbar-nav ml-auto">
               <li class="nav-item">
-                <a href="#" class="nav-link">Home</a>
+                <a href="/" class="nav-link">Início</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">Shopping List</a>
+                <a href="/produtos" class="nav-link">Produtos</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">Benefits</a>
+                <a href="/listaCompras" class="nav-link">Lista de compras</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">Prices</a>
+                <a href="" class="nav-link">Preços</a>
               </li>
               <li class="nav-item">
-                <a href="login.html" class="btn btn-outline-light ml-4">Login</a>
+                <form action="/logout?_method=DELETE" method="POST">
+                  <button type="submit" class="btn btn-outline-light ml-4">Logout</button>
+                </form>
               </li>
             </ul>
           </div>
@@ -59,11 +61,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <img src="<%= produto.imagem %>" class="card-img-top">
+                    <img src="<%= produto[0].LinkImagem %>" class="card-img-top">
                     <div class="card-body">
-                        <h5 class="card-title"><%= produto.nome %></h5>
-                        <p class="card-text">Marca: <%= produto.marca %></p>
-                        <p class="card-text">Quantidade: <%= produto.quantidade %></p>
+                        <h5 class="card-title"><%= produto[0].Nome %></h5>
+                        <p class="card-text">Marca: <%= produto[0].Marca %></p>
+                        <p class="card-text">Quantidade: <%= produto[0].Quantidade %></p>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -72,10 +74,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% for(var i=0; i<produto.supermercados.length; i++) { %>
+                                <% for(var i=0; i<produto.length; i++) { %>
                                     <tr>
-                                        <td><%= produto.supermercados[i].nome %></td>
-                                        <td><%= produto.supermercados[i].preco %> €</td>
+                                        <td><%= produto[i].superficie_IDsup %></td>
+                                        <% if(produto[i].Promo != null) { %> 
+                                          <td><%= produto[i].Promo %> €</td>
+                                        <% }else { %> 
+                                          <td><%= produto[i].PrecoPrim %> €</td>
+                                        <% } %>
                                     </tr>
                                 <% } %>
                             </tbody>
@@ -94,10 +100,10 @@
         <div class="row">
           <div class="col-md-8">
             <p>
-              <a href="">Home</a>
-              <a href="">Shopping List</a>
-              <a href="">Benefits</a>
-              <a href="">Prices</a>
+              <a href="/">Início</a>
+              <a href="/produtos">Produtos</a>
+              <a href="/listaCompras">Lista de compras</a>
+              <a href="">Preços</a>
             </p>
           </div>
           <div class="col-md-4 d-flex justify-content-end">

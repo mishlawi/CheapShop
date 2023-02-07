@@ -58,48 +58,74 @@ module.exports.pushData = (jsonData, Superficie) => {
     });
   }
   console.log("Data push complete!");
-}
+};
 
-module.exports.getAllProducts = () => {
-  query = "SELECT * FROM cheapshop.item"
-  con.query(query, (err, results, fields) => {
-    if (err) return console.log(err);
-    return results;
+module.exports.getAllProducts = (offset) => {
+  query = "SELECT * FROM cheapshop.item LIMIT 30 OFFSET ?";
+  items = [offset];
+  return new Promise((data) => {
+    con.query(query, items, (err, results, fields) => {
+      if (err) return console.log(err);
+      data(results);
+    });
   });
-}
+};
 
-module.exports.getProductsCheaper = () => {
-  query = "SELECT DISTINCT item.EAN, MIN(item.PrecoUni) FROM item GROUP BY item.EAN"
-  con.query(query, (err, results, fields) => {
-    if (err) return console.log(err);
-    return results;
+module.exports.getTotalNumberOfProducts = () => {
+  query = "SELECT COUNT('total') FROM cheapshop.item";
+
+  return new Promise((data) => {
+    con.query(query, (err, results, fields) => {
+      if (err) return console.log(err);
+      data(results[0]);
+    });
   });
-}
+};
+
+module.exports.getProductsCheaper = (offset) => {
+  query =
+    "SELECT prod.* FROM cheapshop.item AS prod JOIN (SELECT DISTINCT EAN, MIN(PrecoUni) AS PrecoUni FROM item GROUP BY EAN LIMIT 30 OFFSET ?) AS min ON prod.ean = min.ean AND prod.PrecoUni = min.PrecoUni";
+  items = [parseInt(offset)];
+  return new Promise((data) => {
+    con.query(query, items, (err, results, fields) => {
+      if (err) return console.log(err);
+      data(results);
+    });
+  });
+};
 
 module.exports.getAllProductsBySuper = (id) => {
-  query = `SELECT * FROM cheapshop.item WHERE superficie_IDsup = ${id}`
-  con.query(query, (err, results, fields) => {
-    if (err) return console.log(err);
-    return results;
+  query = `SELECT * FROM cheapshop.item WHERE superficie_IDsup = ?`;
+  items = [id];
+  return new Promise((data) => {
+    con.query(query, items, (err, results, fields) => {
+      if (err) return console.log(err);
+      data(results);
+    });
   });
-}
+};
 
 module.exports.getAllProductsByEAN = (ean) => {
-  query = `SELECT * FROM cheapshop.item WHERE ean = ${ean}`
-  con.query(query, (err, results, fields) => {
-    if (err) return console.log(err);
-    return results;
+  query = `SELECT * FROM cheapshop.item WHERE ean = ?`;
+  items = [ean];
+  return new Promise((data) => {
+    con.query(query, items, (err, results, fields) => {
+      if (err) return console.log(err);
+      data(results);
+    });
   });
-}
-
+};
 
 module.exports.getShopList = (userId) => {
-  query = `SELECT * FROM cheapshop.lista WHERE user_EmailUser == ${userID}`
-  con.query(query, (err, results, fields) => {
-    if (err) return console.log(err);
-    return results;
+  query = `SELECT * FROM cheapshop.lista WHERE user_EmailUser = ?`;
+  items = [userId];
+  return new Promise((data) => {
+    con.query(query, items, (err, results, fields) => {
+      if (err) return console.log(err);
+      data(results);
+    });
   });
-}
+};
 /*
 module.exports.addProdToShopCart = (qtd, userId, ean, sup) => {
   console.log("Starting data push..");

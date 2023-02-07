@@ -4,8 +4,7 @@ const { checkAuthenticated, checkNotAuthenticated } = require("../auth_checks");
 const bcrypt = require("bcrypt");
 const User = require("../db_conn");
 const passport = require("passport");
-var axios = require("axios")
-
+var axios = require("axios");
 
 /* GET home page. */
 router.get("/", checkAuthenticated, async (req, res, next) => {
@@ -18,9 +17,11 @@ router.get("/login", checkNotAuthenticated, (req, res, next) => {
 });
 
 /* POST login */
-router.post("/login", checkNotAuthenticated,
+router.post(
+  "/login",
+  checkNotAuthenticated,
   passport.authenticate("local", {
-    successRedirect: "/",
+    successRedirect: "/produtos",
     failureRedirect: "/login",
     failureFlash: true,
   })
@@ -45,7 +46,7 @@ router.get("/register", checkNotAuthenticated, (req, res, next) => {
 router.post("/register", checkNotAuthenticated, async (req, res, next) => {
   try {
     const hashPassword = await bcrypt.hash(req.body.password, 10);
-    if (!await User.get_user_by_email(req.body.email)) {
+    if (!(await User.get_user_by_email(req.body.email))) {
       User.register_user(
         req.body.email,
         req.body.name,
@@ -68,34 +69,50 @@ router.post("/register", checkNotAuthenticated, async (req, res, next) => {
     //   () => console.log("One entry added"),
     //   (err) => console.log(err)
     // );
-  } catch (e){
+  } catch (e) {
     console.log(e);
     res.redirect("/register");
   }
 });
 
 router.get("/produtos", checkAuthenticated, async (req, res) => {
-  return await axios("http://api:8080/api/productsCheaper")
-    .then(resp => res.render("products", {"produtos" : resp}))
-    .catch( e => console.log(e))
-})
+  page = 1;
+  offset = 0;
+  if (req.query.offset != null && req.query.offset != 0) {
+    page = req.query.offset / 30 + 1;
+    offset = req.query.offset;
+  }
+  return await axios(
+    "http://localhost:8080/api/productsCheaper?offset=" + offset
+  )
+    .then((resp) => {
+      console.log(resp.data, "\n\ndata", offset);
+      res.render("products", {
+        products: resp.data[0],
+        page: page,
+        perPage: 30,
+        total: resp.data[1]["COUNT('total')"],
+      });
+    })
+    .catch((e) => console.log(e));
+});
 
 router.get("/produto/:ean", checkAuthenticated, async (req, res) => {
-  return await axios("http://api:8080/api/products?ean=" + req.params.ean)
-    .then(resp => res.render("product", {"produto" : resp}))
-    .catch( e => console.log(e))
-})
+  return await axios("http://localhost:8080/api/products?ean=" + req.params.ean)
+    .then((resp) => {
+      res.render("product", { produto: resp.data });
+    })
+    .catch((e) => console.log(e));
+});
 
 // COMO VERIFICAR A LISTA DE COMPRAS QUE QUERO??
 router.get("/listaCompras", checkAuthenticated, async (req, res) => {
-  return await axios("http://api:8080/api/listaCompras/" + req.user.email)
-    .then(resp => res.render("shoplist", {"listaCompras" : resp}))
-    .catch( e => console.log(e))
-})
+  return await axios("http://localhost:8080/api/shopList/" + req.user.EmailUser)
+    .then((resp) => res.render("shoplist", { listaCompras: resp.data }))
+    .catch((e) => console.log(e));
+});
 
-router.post("/listaCompras", checkAuthenticated, async (req, res) => {
-  
-})
+router.post("/listaCompras", checkAuthenticated, async (req, res) => {});
 
 // TODO - ADICIONAR PRODUTO À LISTA DE COMPRAS
 // TODO - LISTA DE COMPRAS DO PRODUTO MAIS BARATO
