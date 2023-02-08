@@ -73,4 +73,15 @@ app.get("/api/shopList/:id", (req, res) => {
     .catch((e) => res.status(505).jsonp(e));
 });
 
+
+app.post("/api/shopList/:id", (req, res) => {
+  qtd = req.body.qtd;
+  userId = req.body.userId;
+  ean = req.body.ean;
+
+  db.addProdToShopCart(qtd, userId, ean, req.params.id)
+    .then(redirect('/'))
+    .catch((e) => res.status(505).jsonp(e));
+});
+
 app.listen(8080, () => console.log(`API listening on port 8080!`));

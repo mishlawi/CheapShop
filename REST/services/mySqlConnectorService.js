@@ -126,40 +126,26 @@ module.exports.getShopList = (userId) => {
     });
   });
 };
-/*
-module.exports.addProdToShopCart = (qtd, userId, ean, sup) => {
-  console.log("Starting data push..");
 
-    var insertStatement = `INSERT INTO cheapshop.lista (Quantidade, EAN, Marca, Quantidade, PrecoPrim, PrecoUni, Promo, LinkImagem, LinkProduto, superficie_IDsup) 
-                values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE Nome = ?, Marca = ?, Quantidade = ?, PrecoPrim = ?, PrecoUni = ?, Promo = ?, LinkImagem = ?, LinkProduto = ?;`;
+
+module.exports.addProdToShopCart = (Quantidade, user_EmailUser, item_EAN, item_superficie_IDsup) => {
+  console.log("Adding product to cart..");
+
+    var insertStatement = `INSERT INTO cheapshop.lista (Quantidade, user_EmailUser, item_EAN, item_superficie_IDsup) 
+                values(?, ?, ?, ?) ON DUPLICATE KEY UPDATE Quantidade = ?, user_EmailUser = ?, item_EAN = ?, item_superficie_IDsup = ?;`;
+    
     var items = [
-      Nome,
-      EAN,
-      Marca,
       Quantidade,
-      PrecoPrim,
-      PrecoUni,
-      Promo,
-      LinkImagem,
-      LinkProduto,
-      Superficie,
-      Nome,
-      Marca,
-      Quantidade,
-      PrecoPrim,
-      PrecoUni,
-      Promo,
-      LinkImagem,
-      LinkProduto,
+      user_EmailUser,
+      item_EAN,
+      item_superficie_IDsup,
     ];
 
     // Insert data into database
     con.query(insertStatement, items, (err, results, fields) => {
       if (err) {
-        console.log("Unable to insert item at row ", i + 1);
+        console.log("Unable to insert product to cart");
         return console.log(err);
       }
     });
-  }
-  console.log("Data push complete!");
-}*/
+}
